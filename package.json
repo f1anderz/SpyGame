@@ -1,0 +1,17 @@
+{
+  "name": "spyapi",
+  "version": "1.0.0",
+  "description": "API for Spy Game",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [
+    "api",
+    "node",
+    "express"
+  ],
+  "author": "f1anderz",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

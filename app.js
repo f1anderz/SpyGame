@@ -2,8 +2,14 @@ const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cors = require('cors');
+const bcrypt = require('bcrypt');
+
 require('dotenv').config();
+
 const app = express();
+
+const key = process.env.API_KEY;
 
 const userRoutes = require("./api/routes/user");
 const gameRoutes = require("./api/routes/game");
@@ -12,17 +18,22 @@ const locationRoutes = require("./api/routes/location");
 
 mongoose.connect('mongodb+srv://f1anderz:' + process.env.MONGO_ATLAS_PW + '@spy-game.jydpt3u.mongodb.net/?retryWrites=true&w=majority');
 
+app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', '*');
-    if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
-        return res.status(200).json({});
-    }
+    bcrypt.compare(req.headers["x-api-key"], key, (err, response) => {
+        if (response) {
+            next();
+        } else {
+            res.status(401).json({
+                status: false,
+                message: "No API authorization"
+            });
+        }
+    });
 });
 
 app.use('/users', userRoutes);

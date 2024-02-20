@@ -7,6 +7,8 @@ const app = express();
 
 const userRoutes = require("./api/routes/user");
 const gameRoutes = require("./api/routes/game");
+const collectionRoutes = require("./api/routes/collection");
+const locationRoutes = require("./api/routes/location");
 
 mongoose.connect('mongodb+srv://f1anderz:' + process.env.MONGO_ATLAS_PW + '@spy-game.jydpt3u.mongodb.net/?retryWrites=true&w=majority');
 
@@ -25,6 +27,8 @@ app.use((req, res, next) => {
 
 app.use('/users', userRoutes);
 app.use('/games', gameRoutes);
+app.use('/collections', collectionRoutes);
+app.use('/locations', locationRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not Found');

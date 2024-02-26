@@ -1,0 +1,14 @@
+@use 'breakpoints';
+
+@mixin breakpoint($user-value) {
+  $breakpoint: map-get(breakpoints.$breakpoints, $user-value);
+  @if $breakpoint {
+    @media (#{$breakpoint}) {
+      @content;
+    }
+  } @else {
+    @error 'Breakpoint #{$breakpoint} is not defined';
+  }
+}
+
+;

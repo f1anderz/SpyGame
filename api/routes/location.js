@@ -7,12 +7,10 @@ const mongoose = require("mongoose");
 router.get('/', (req, res, next) => {
     Location.find({}).exec().then((result) => {
         res.status(200).json({
-            status: true,
-            locations: result
+            message: "Fetched all locations", locations: result
         });
     }).catch((err) => {
         res.status(500).json({
-            status: false,
             error: err
         });
     });
@@ -22,12 +20,10 @@ router.get('/:id', (req, res, next) => {
     Location.findOne({_id: req.params.id}).exec().then((result) => {
         if (result !== null) {
             res.status(200).json({
-                status: true,
-                location: result
+                message: "Fetched location with id " + req.params.id, location: result
             });
         } else {
             res.status(404).json({
-                status: false,
                 error: {
                     message: "Location with id " + req.params.id + " not found"
                 }
@@ -35,7 +31,6 @@ router.get('/:id', (req, res, next) => {
         }
     }).catch((err) => {
         res.status(500).json({
-            status: false,
             error: err
         });
     });
@@ -47,12 +42,10 @@ router.post('/', (req, res, next) => {
     });
     location.save().then((result) => {
         res.status(201).json({
-            status: true,
-            insertID: result._id
+            message: "Inserted location with id " + result._id, insertID: result._id
         });
     }).catch((err) => {
         res.status(500).json({
-            status: false,
             error: err
         });
     });

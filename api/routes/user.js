@@ -64,7 +64,9 @@ router.post('/login', (req, res, next) => {
                     });
                 } else {
                     res.status(401).json({
-                        message: "Password incorrect"
+                        error: {
+                            message: "Password incorrect"
+                        }
                     });
                 }
             });

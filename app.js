@@ -29,8 +29,9 @@ app.use((req, res, next) => {
             next();
         } else {
             res.status(401).json({
-                status: false,
-                message: "No API authorization"
+                error: {
+                    message: "No API authorization"
+                }
             });
         }
     });

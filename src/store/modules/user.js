@@ -26,13 +26,13 @@ const mutations = {
 const actions = {
     loginUser(context, loginData) {
         return userAPI.login(loginData);
-    }, async setUser(context, userID) {
+    },
+    async setUser(context, userID) {
         const cookies = inject('$cookies');
         cookies.set('userID', userID, "30d");
         let response = await userAPI.getUser(userID);
         context.commit('setID', response.data.user._id);
         context.commit('setUsername', state.username = response.data.user.username);
-        return context.state.username;
     }
 }
 

@@ -14,11 +14,17 @@ export default {
 
 <script setup>
 import {useStore} from 'vuex';
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 
 const store = useStore();
 
-let username = ref(store.state.user.username);
+const username = ref('username');
+
+onMounted(() => {
+  setTimeout(()=>{
+    username.value = store.state.user.username
+  }, 250)
+})
 </script>
 
 <style scoped lang="scss">

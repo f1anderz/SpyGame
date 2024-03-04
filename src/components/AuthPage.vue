@@ -18,7 +18,7 @@
                        @switch-click="registration = !registration"/>
       </div>
       <adaptive-button :adapt-property="registration" :adapt-value="['Sign Up','Sign In']"
-                       @adaptive-click="registration.value ? registerUser() : loginUser()"/>
+                       @adaptive-click="registration ? registerUser() : loginUser()"/>
     </div>
   </div>
 </template>

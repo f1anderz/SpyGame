@@ -1,8 +1,9 @@
 <template>
   <div class="spy-header">
-    <div class="spy-header-icon"><img src="@/assets/img/favicon.svg" alt="SpyGameIcon"></div>
+    <img class="spy-header-icon" src="@/assets/img/favicon.svg" alt="SpyGameIcon">
     <div class="spy-header-name">SpyGame</div>
-    <div class="spy-header-profile"><a href="#" @click="logoutUser">{{ store.state.user.username}}</a></div>
+    <div class="spy-header-profile" @click="logoutUser" v-if="store.state.user.username">{{ store.state.user.username }}</div>
+    <div class="spy-header-profile" @click="router.push('/SpyGame/auth')" v-else>Sign in</div>
   </div>
 </template>
 
@@ -15,13 +16,15 @@ export default {
 <script setup>
 import {useStore} from 'vuex';
 import {inject} from 'vue';
+import {useRouter} from "vue-router";
 
 const store = useStore();
+const router = useRouter();
 
 const cookies = inject('$cookies');
 
 
-function logoutUser(event) {
+function logoutUser() {
   store.dispatch('user/logoutUser').then(() => {
     cookies.remove('userID');
   }).catch((err) => {
@@ -31,5 +34,64 @@ function logoutUser(event) {
 </script>
 
 <style scoped lang="scss">
+@use '@/assets/scss/style';
 
+.spy-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: style.$background-color;
+
+  @include style.breakpoint(xs) {
+    padding: .4rem 3%;
+    gap: .3rem;
+  }
+
+  @include style.breakpoint(s) {
+    padding: .4rem 5%;
+    gap: .3rem;
+  }
+
+  @include style.breakpoint(m) {
+    padding: .4rem 4%;
+    gap: .4rem;
+  }
+
+  @include style.breakpoint(l) {
+    padding: .4rem 6%;
+    gap: .5rem;
+  }
+
+  @include style.breakpoint(xl) {
+    padding: .4rem 7%;
+    gap: .5rem;
+  }
+
+  @include style.breakpoint(xxl) {
+    padding: .4rem 15%;
+    gap: .5rem;
+  }
+
+  &-icon {
+    display: block;
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  &-name {
+    color: style.$text-color;
+    font-family: style.$font-header;
+  }
+
+  &-profile {
+    color: style.$text-color;
+    font-family: style.$font-body;
+    margin-left: auto;
+
+    &:hover{
+      color: style.$accent-color;
+      cursor: pointer;
+    }
+  }
+}
 </style>

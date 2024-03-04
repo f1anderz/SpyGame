@@ -2,7 +2,9 @@
   <div class="spy-header">
     <img class="spy-header-icon" src="@/assets/img/favicon.svg" alt="SpyGameIcon">
     <div class="spy-header-name">SpyGame</div>
-    <div class="spy-header-profile" @click="logoutUser" v-if="store.state.user.username">{{ store.state.user.username }}</div>
+    <div class="spy-header-profile" @click="logoutUser" v-if="store.state.user.username">
+      {{ store.state.user.username }}
+    </div>
     <div class="spy-header-profile" @click="router.push('/SpyGame/auth')" v-else>Sign in</div>
   </div>
 </template>
@@ -40,7 +42,7 @@ function logoutUser() {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: style.$background-color;
+  background-color: style.$secondary-background-color;
 
   @include style.breakpoint(xs) {
     padding: .4rem 3%;
@@ -88,7 +90,7 @@ function logoutUser() {
     font-family: style.$font-body;
     margin-left: auto;
 
-    &:hover{
+    &:hover {
       color: style.$accent-color;
       cursor: pointer;
     }

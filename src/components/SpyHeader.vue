@@ -2,7 +2,7 @@
   <div class="spy-header">
     <div class="spy-header-icon"><img src="@/assets/img/favicon.svg" alt="SpyGameIcon"></div>
     <div class="spy-header-name">SpyGame</div>
-    <div class="spy-header-profile"><a href="#">{{ username }}</a></div>
+    <div class="spy-header-profile"><a href="#" @click="logoutUser">{{ store.state.user.username}}</a></div>
   </div>
 </template>
 
@@ -14,17 +14,20 @@ export default {
 
 <script setup>
 import {useStore} from 'vuex';
-import {onMounted, ref} from 'vue';
+import {inject} from 'vue';
 
 const store = useStore();
 
-const username = ref('username');
+const cookies = inject('$cookies');
 
-onMounted(() => {
-  setTimeout(()=>{
-    username.value = store.state.user.username
-  }, 250)
-})
+
+function logoutUser(event) {
+  store.dispatch('user/logoutUser').then(() => {
+    cookies.remove('userID');
+  }).catch((err) => {
+    console.log(err);
+  });
+}
 </script>
 
 <style scoped lang="scss">

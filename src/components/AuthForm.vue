@@ -12,46 +12,40 @@
 </template>
 
 <script>
-import {useStore} from 'vuex';
-import {useRouter} from 'vue-router';
-import {ref} from 'vue';
-
 export default {
-  name: 'AuthForm',
-  setup() {
-    const store = useStore();
-    const router = useRouter();
+  name: 'AuthForm'
+}
+</script>
 
-    let registration = ref(false);
+<script setup>
+import {useStore} from "vuex";
+import {useRouter} from "vue-router";
+import {inject, ref} from "vue";
 
-    let login = ref('');
-    let username = ref('');
-    let password = ref('');
-    let message = ref('');
+const store = useStore();
+const router = useRouter();
 
-    function loginUser(event) {
-      store.dispatch('user/loginUser', {
-        login: login.value,
-        password: password.value
-      }).then((response) => {
-        store.dispatch('user/setUser', response.data.userID);
-        this.message = '';
-        router.push('/SpyGame');
-      }).catch((err) => {
-        this.message = err.response.data.error.message;
-      });
-    }
+const cookies = inject('$cookies');
 
-    return {
-      store,
-      loginUser,
-      registration,
-      login,
-      username,
-      password,
-      message,
-    }
-  }
+const registration = ref(false);
+
+const login = ref('');
+const username = ref('');
+const password = ref('');
+const message = ref('');
+
+function loginUser(event) {
+  store.dispatch('user/loginUser', {
+    login: login.value,
+    password: password.value
+  }).then((response) => {
+    cookies.set('userID', response.data.userID, "30d");
+    store.dispatch('user/setUser', response.data.userID);
+    message.value = '';
+    router.push('/SpyGame/');
+  }).catch((err) => {
+    message.value = err.response.data.error.message;
+  });
 }
 </script>
 

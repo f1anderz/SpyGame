@@ -3,7 +3,7 @@ import api from '@/api';
 
 export default {
     async register(registerData) {
-        return await axios.post('http://localhost:3333/users', {
+        return await axios.post('https://spygame.onrender.com/users', {
             username: registerData.username, login: registerData.login, password: registerData.password
         }, {
             headers: {
@@ -11,7 +11,7 @@ export default {
             }
         });
     }, async login(loginData) {
-        return await axios.post('http://localhost:3333/users/login', {
+        return await axios.post('https://spygame.onrender.com/users/login', {
             login: loginData.login, password: loginData.password
         }, {
             headers: {
@@ -19,7 +19,7 @@ export default {
             }
         });
     }, async getUser(id) {
-        return await axios.get(`http://localhost:3333/users/${id}`, {
+        return await axios.get(`https://spygame.onrender.com/users/${id}`, {
             headers: {
                 'x-api-key': api.key
             }

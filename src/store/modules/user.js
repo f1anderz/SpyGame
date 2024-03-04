@@ -1,20 +1,20 @@
 import userAPI from '@/api/user.js';
-import {inject} from 'vue';
+import {reactive} from "vue";
 
-const state = {
+const state = reactive({
     id: '', username: '', isInGame: false
-};
+});
 
-const getters = {
+const getters = reactive({
     isUserLoggedIn(state) {
         return state.id.length > 0;
     }
-}
+});
 
 const mutations = {
     setID(state, userID) {
         state.id = userID;
-    },setUsername(state, username) {
+    }, setUsername(state, username) {
         state.username = username;
     }, joinGame(state) {
         state.isInGame = true;
@@ -28,11 +28,13 @@ const actions = {
         return userAPI.login(loginData);
     },
     async setUser(context, userID) {
-        const cookies = inject('$cookies');
-        cookies.set('userID', userID, "30d");
         let response = await userAPI.getUser(userID);
         context.commit('setID', response.data.user._id);
         context.commit('setUsername', state.username = response.data.user.username);
+    },
+    logoutUser(context) {
+        context.commit('setID', '');
+        context.commit('setUsername', '');
     }
 }
 

@@ -5,6 +5,9 @@
   <main>
     <router-view/>
   </main>
+  <footer>
+    <spy-footer/>
+  </footer>
 </template>
 
 <script>
@@ -19,6 +22,7 @@ export default {
 <script setup>
 import {useStore} from 'vuex';
 import {inject, onBeforeMount} from 'vue';
+import SpyFooter from "@/components/SpyFooter.vue";
 
 const store = useStore();
 const cookies = inject('$cookies');

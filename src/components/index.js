@@ -1,6 +1,7 @@
 import App from '@/components/App.vue';
 import SpyHeader from '@/components/SpyHeader.vue';
-import AuthForm from '@/components/AuthForm.vue';
-import Home from '@/components/Home.vue';
+import AuthPage from '@/components/AuthPage.vue';
+import HomePage from '@/components/Home.vue';
+import UI from '@/components/UI';
 
-export default [App, SpyHeader, AuthForm, Home];
+export default [App, SpyHeader, AuthPage, HomePage, UI];

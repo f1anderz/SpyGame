@@ -17,7 +17,7 @@
         <switch-button v-else :switch-target="'signup'" :prompt="['Don`t have an account?','Sign Up']"
                        @switch-click="registration = !registration"/>
       </div>
-      <adaptive-button :adapt-property="registration" :adapt-value="['Sign Up','Sign In']" @adaptive-click="loginUser"/>
+      <adaptive-button :adapt-property="registration" :adapt-value="['Sign Up','Sign In']" @adaptive-click="authUser"/>
     </div>
   </div>
 </template>
@@ -51,6 +51,14 @@ const username = ref('');
 const password = ref('');
 const message = ref('');
 
+function authUser() {
+  if (registration.value) {
+    registerUser()
+  } else {
+    loginUser()
+  }
+}
+
 function loginUser() {
   store.dispatch('user/loginUser', {
     login: login.value,
@@ -63,6 +71,21 @@ function loginUser() {
   }).catch((err) => {
     message.value = err.response.data.error.message;
   });
+}
+
+function registerUser() {
+  store.dispatch('user/registerUser', {
+    login: login.value,
+    username: username.value,
+    password: password.value
+  }).then((response) => {
+    cookies.set('userID', response.data.insertID, "30d");
+    store.dispatch('user/setUser', response.data.insertID);
+    message.value = '';
+    router.push('/SpyGame/');
+  }).catch((err) => {
+    message.value = err.response.data.error.message;
+  })
 }
 </script>
 
@@ -108,7 +131,9 @@ function loginUser() {
     }
 
     @include style.breakpoint(m) {
-
+      width: 60%;
+      padding: 1rem;
+      gap: .6rem;
     }
 
     @include style.breakpoint(l) {
@@ -118,7 +143,9 @@ function loginUser() {
     }
 
     @include style.breakpoint(xl) {
-
+      width: 34%;
+      padding: .7rem;
+      gap: .6rem;
     }
 
     @include style.breakpoint(xxl) {

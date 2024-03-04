@@ -90,9 +90,11 @@ function logoutUser() {
     font-family: style.$font-body;
     margin-left: auto;
 
-    &:hover {
-      color: style.$accent-color;
-      cursor: pointer;
+    @include style.breakpoint(xxl) {
+      &:hover {
+        color: style.$accent-color;
+        cursor: pointer;
+      }
     }
   }
 }

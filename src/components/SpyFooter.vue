@@ -1,7 +1,7 @@
 <template>
   <div class="spy-footer">
     <div class="spy-footer-created">Made in Ukraine <img src="@/assets/img/ukraine.webp" alt="UA"></div>
-    <div class="spy-footer-author"><a href="https://linktr.ee/f1anderz">f1anderz</a></div>
+    <div class="spy-footer-author"><a href="https://linktr.ee/f1anderz" target="_blank">f1anderz</a></div>
     <div class="spy-footer-copyright">
       &copy; <span class="highlight">2024</span>
     </div>

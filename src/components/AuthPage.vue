@@ -17,7 +17,8 @@
         <switch-button v-else :switch-target="'signup'" :prompt="['Don`t have an account?','Sign Up']"
                        @switch-click="registration = !registration"/>
       </div>
-      <adaptive-button :adapt-property="registration" :adapt-value="['Sign Up','Sign In']" @adaptive-click="authUser"/>
+      <adaptive-button :adapt-property="registration" :adapt-value="['Sign Up','Sign In']"
+                       @adaptive-click="registration.value ? registerUser() : loginUser()"/>
     </div>
   </div>
 </template>
@@ -50,14 +51,6 @@ const login = ref('');
 const username = ref('');
 const password = ref('');
 const message = ref('');
-
-function authUser() {
-  if (registration.value) {
-    registerUser()
-  } else {
-    loginUser()
-  }
-}
 
 function loginUser() {
   store.dispatch('user/loginUser', {

@@ -76,8 +76,8 @@ function logoutUser() {
 
   &-icon {
     display: block;
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 2.5rem;
+    height: 2.5rem;
   }
 
   &-name {

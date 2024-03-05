@@ -1,7 +1,7 @@
 <template>
   <div class="spy-header">
-    <img class="spy-header-icon" src="@/assets/img/favicon.svg" alt="SpyGameIcon">
-    <div class="spy-header-name">SpyGame</div>
+    <img class="spy-header-icon" src="@/assets/img/favicon.svg" alt="SpyGameIcon" @click="router.push('/SpyGame/')">
+    <div class="spy-header-name" @click="router.push('/SpyGame/')">SpyGame</div>
     <div class="spy-header-profile" @click="logoutUser" v-if="store.state.user.username">
       {{ store.state.user.username }}
     </div>
@@ -78,11 +78,23 @@ function logoutUser() {
     display: block;
     width: 2.5rem;
     height: 2.5rem;
+
+    @include style.breakpoint(xxl) {
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 
   &-name {
     color: style.$text-color;
     font-family: style.$font-header;
+
+    @include style.breakpoint(xxl) {
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 
   &-profile {

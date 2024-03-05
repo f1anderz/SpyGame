@@ -4,5 +4,6 @@ import SwitchButton from "@/components/UI/SwitchButton.vue";
 import AdaptiveButton from "@/components/UI/AdaptiveButton.vue";
 import SpyButton from "@/components/UI/SpyButton.vue";
 import SpyLinkButton from "@/components/UI/SpyLinkButton.vue";
+import RulesItem from '@/components/UI/RulesItem.vue';
 
-export default [SpyInput, PasswordInput, SwitchButton, AdaptiveButton, SpyButton, SpyLinkButton];
+export default [SpyInput, PasswordInput, SwitchButton, AdaptiveButton, SpyButton, SpyLinkButton, RulesItem];

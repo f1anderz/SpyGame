@@ -1,7 +1,8 @@
 import {createRouter, createWebHistory} from "vue-router";
 import HomePage from "@/components/HomePage.vue";
-import AuthForm from "@/components/AuthPage.vue";
+import AuthPage from "@/components/AuthPage.vue";
 import NotFoundPage from '@/components/NotFoundPage.vue';
+import RulesPage from '@/components/RulesPage.vue';
 
 export default createRouter({
     routes: [
@@ -9,7 +10,10 @@ export default createRouter({
             path: '/SpyGame', component: HomePage,
         },
         {
-            path: '/SpyGame/auth', component: AuthForm
+            path: '/SpyGame/auth', component: AuthPage
+        },
+        {
+            path: '/SpyGame/rules', component: RulesPage
         },
         {
             path: '/:pathMatch(.*)*', component: NotFoundPage

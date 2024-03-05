@@ -7,7 +7,7 @@
     </div>
     <div class="spy-home-page-controls">
       <SpyLinkButton :content="'Locations Workshop'"/>
-      <SpyLinkButton :content="'Rules'"/>
+      <SpyLinkButton :content="'Rules'" @link-click="router.push('/SpyGame/rules')"/>
     </div>
   </div>
 </template>
@@ -19,7 +19,9 @@ export default {name: 'Home'}
 <script setup>
 import SpyButton from '@/components/UI/SpyButton.vue';
 import SpyLinkButton from '@/components/UI/SpyLinkButton.vue';
+import {useRouter} from 'vue-router';
 
+const router = useRouter();
 </script>
 
 <style scoped lang="scss">

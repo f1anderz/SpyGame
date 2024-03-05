@@ -5,5 +5,6 @@ import HomePage from '@/components/HomePage.vue';
 import UI from '@/components/UI';
 import SpyFooter from "@/components/SpyFooter.vue";
 import NotFoundPage from '@/components/NotFoundPage.vue';
+import RulesPage from '@/components/RulesPage.vue';
 
-export default [App, SpyHeader, SpyFooter, AuthPage, HomePage, UI, NotFoundPage];
+export default [App, SpyHeader, SpyFooter, AuthPage, HomePage, UI, NotFoundPage, RulesPage];

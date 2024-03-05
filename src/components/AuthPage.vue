@@ -28,7 +28,7 @@ import SpyInput from "@/components/UI/SpyInput.vue";
 import PasswordInput from "@/components/UI/PasswordInput.vue";
 
 export default {
-  name: 'AuthForm',
+  name: 'AuthPage',
   components: {SpyInput, PasswordInput}
 }
 </script>
@@ -36,7 +36,7 @@ export default {
 <script setup>
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
-import {inject, ref} from "vue";
+import {inject, onMounted, ref} from "vue";
 import SwitchButton from "@/components/UI/SwitchButton.vue";
 import AdaptiveButton from "@/components/UI/AdaptiveButton.vue";
 
@@ -80,6 +80,12 @@ function registerUser() {
     message.value = err.response.data.error.message;
   })
 }
+
+onMounted(() => {
+  if (cookies.get('userID')) {
+    router.push('/SpyGame/');
+  }
+});
 </script>
 
 <style scoped lang="scss">

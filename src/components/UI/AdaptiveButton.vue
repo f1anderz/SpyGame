@@ -1,14 +1,12 @@
 <template>
   <button class="adaptive-button" @click="emit('adaptiveClick');">
-    <span v-if="props.adaptProperty">{{ props.adaptValue[0] }}</span>
-    <span v-else>{{ props.adaptValue[1] }}</span>
+    <span class="adaptive-button-content" v-if="props.adaptProperty">{{ props.adaptValue[0] }}</span>
+    <span class="adaptive-button-content" v-else>{{ props.adaptValue[1] }}</span>
   </button>
 </template>
 
 <script>
-export default {
-  name: "AdaptiveButton"
-}
+export default {name: "AdaptiveButton"}
 </script>
 
 <script setup>
@@ -28,7 +26,7 @@ const emit = defineEmits(['adaptiveClick']);
   margin: 0 auto;
   border-radius: 5rem;
   display: block;
-  border: none;
+  border: .13rem solid style.$accent-color;
   background: style.$background-color;
   font-size: 1.15rem;
   color: style.$text-color;

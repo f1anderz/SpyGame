@@ -1,16 +1,18 @@
 <template>
-  <div class="locations-page">
+  <div class="locations-page" @click="closeModal">
     <div class="locations-page-controls">
       <div class="locations-page-controls-header">Suggest <span class="highlight">new content</span></div>
       <div class="locations-page-controls-content">
-        <SpyButtonMini :content="'New Collection'"/>
-        <SpyButtonMini :content="'New Location'"/>
+        <spy-button-mini :content="'New Collection'" @buttonClick="formMode = 'C'"/>
+        <spy-button-mini :content="'New Location'" @buttonClick="formMode = 'L'"/>
       </div>
     </div>
     <div class="locations-page-collections">
       <div class="locations-page-collections-header">Available <span class="highlight">collections</span></div>
-      <ListLocationsCollection :collections="collections"/>
+      <list-locations-collection :collections="collections"/>
     </div>
+    <suggest-form v-if="formMode" :form-mode="formMode"/>
+    <alert-window :is-hidden="alertHidden" :message="alertMessage"/>
   </div>
 </template>
 
@@ -24,8 +26,28 @@ import {onBeforeMount, ref} from 'vue';
 
 import api from '@/api/locations.js';
 import ListLocationsCollection from '@/components/ListLocationsCollections.vue';
+import SuggestForm from '@/components/SuggestForm.vue';
+import AlertWindow from '@/components/UI/AlertWindow.vue';
 
 const collections = ref([]);
+
+const formMode = ref('');
+
+const alertHidden = ref(true);
+const alertMessage = ref('');
+
+function closeModal(event) {
+  if (event.target.classList[0] === 'suggest-page') {
+    formMode.value = '';
+  } else if (event.target.classList[0] === 'adaptive-button' || event.target.classList[0] === 'adaptive-button-content') {
+    formMode.value = '';
+    alertMessage.value = 'Suggestion sent'
+    alertHidden.value = false;
+    setTimeout(() => {
+      alertHidden.value = true;
+    }, 750);
+  }
+}
 
 onBeforeMount(() => {
   api.getCollections().then((result) => {
@@ -40,10 +62,12 @@ onBeforeMount(() => {
 @use '@/assets/scss/style';
 
 .locations-page {
+  position: relative;
   height: 100vh;
   background: style.$background-color;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2rem;
   padding: 5vh 0;
 
@@ -54,27 +78,27 @@ onBeforeMount(() => {
     justify-content: center;
     gap: 1rem;
 
-    @include style.breakpoint(xs){
+    @include style.breakpoint(xs) {
       width: 80%;
     }
 
-    @include style.breakpoint(s){
+    @include style.breakpoint(s) {
       width: 70%;
     }
 
-    @include style.breakpoint(m){
+    @include style.breakpoint(m) {
       width: 70%;
     }
 
-    @include style.breakpoint(l){
+    @include style.breakpoint(l) {
       width: 60%;
     }
 
-    @include style.breakpoint(xl){
+    @include style.breakpoint(xl) {
       width: 50%;
     }
 
-    @include style.breakpoint(xxl){
+    @include style.breakpoint(xxl) {
       width: 40%;
     }
 

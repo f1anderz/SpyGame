@@ -3,7 +3,7 @@
     <div class="auth-header">
       <span v-if="registration">Sign Up</span>
       <span v-else>Sign In</span>
-      to <span class="auth-header-highlight">SpyGame</span> now
+      to <span class="auth-header-highlight">Spy<span class="highlight">Game</span></span> now
     </div>
     <div class="auth-form">
       <div class="auth-form-error" v-if="message">{{ message }}</div>

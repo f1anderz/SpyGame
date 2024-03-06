@@ -11,11 +11,8 @@
 </template>
 
 <script>
-import SpyHeader from '@/components/SpyHeader.vue';
-
 export default {
-  name: 'App',
-  components: {SpyHeader},
+  name: 'App'
 }
 </script>
 
@@ -23,6 +20,7 @@ export default {
 import {useStore} from 'vuex';
 import {inject, onBeforeMount} from 'vue';
 import SpyFooter from "@/components/SpyFooter.vue";
+import SpyHeader from '@/components/SpyHeader.vue';
 
 const store = useStore();
 const cookies = inject('$cookies');

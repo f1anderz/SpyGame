@@ -6,5 +6,6 @@ import UI from '@/components/UI';
 import SpyFooter from "@/components/SpyFooter.vue";
 import NotFoundPage from '@/components/NotFoundPage.vue';
 import RulesPage from '@/components/RulesPage.vue';
+import LocationsWorkshopPage from '@/components/LocationsWorkshopPage.vue';
 
-export default [App, SpyHeader, SpyFooter, AuthPage, HomePage, UI, NotFoundPage, RulesPage];
+export default [App, SpyHeader, SpyFooter, AuthPage, HomePage, UI, NotFoundPage, RulesPage, LocationsWorkshopPage];

@@ -6,7 +6,7 @@
       <SpyButton :content="'Create Game'"/>
     </div>
     <div class="spy-home-page-controls">
-      <SpyLinkButton :content="'Locations Workshop'"/>
+      <SpyLinkButton :content="'Locations Workshop'" @link-click="router.push('/SpyGame/locations')"/>
       <SpyLinkButton :content="'Rules'" @link-click="router.push('/SpyGame/rules')"/>
     </div>
   </div>

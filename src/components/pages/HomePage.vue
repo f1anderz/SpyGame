@@ -2,8 +2,8 @@
   <div class="spy-home-page">
     <div class="spy-home-page-title">Spy<span class="highlight">Game</span></div>
     <div class="spy-home-page-games">
-      <SpyButton :content="'Join Game'"/>
-      <SpyButton :content="'Create Game'"/>
+      <SpyButton :content="'Join Room'"/>
+      <SpyButton :content="'Create Room'"/>
     </div>
     <div class="spy-home-page-controls">
       <SpyLinkButton :content="'Locations Workshop'" @link-click="router.push('/SpyGame/locations')"/>

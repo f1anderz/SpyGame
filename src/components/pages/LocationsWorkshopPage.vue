@@ -23,7 +23,7 @@ import SpyButtonMini from '@/components/UI/SpyButtonMini.vue';
 import {onBeforeMount, ref} from 'vue';
 
 import api from '@/api/locations.js';
-import ListLocationsCollection from '@/components/UI/ListLocationsCollections.vue';
+import ListLocationsCollection from '@/components/ListLocationsCollections.vue';
 
 const collections = ref([]);
 

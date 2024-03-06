@@ -12,7 +12,7 @@ export default {name: 'LocationsCollection'}
 </script>
 
 <script setup>
-import ListLocations from '@/components/UI/ListLocations.vue';
+import ListLocations from '@/components/ListLocations.vue';
 import {ref} from 'vue';
 
 const props = defineProps({

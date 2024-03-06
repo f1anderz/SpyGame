@@ -1,9 +1,9 @@
 import {createRouter, createWebHistory} from "vue-router";
-import HomePage from "@/components/HomePage.vue";
-import AuthPage from "@/components/AuthPage.vue";
-import NotFoundPage from '@/components/NotFoundPage.vue';
-import RulesPage from '@/components/RulesPage.vue';
-import LocationsWorkshopPage from '@/components/LocationsWorkshopPage.vue';
+import HomePage from "@/components/pages/HomePage.vue";
+import AuthPage from "@/components/pages/AuthPage.vue";
+import NotFoundPage from '@/components/pages/NotFoundPage.vue';
+import RulesPage from '@/components/pages/RulesPage.vue';
+import LocationsWorkshopPage from '@/components/pages/LocationsWorkshopPage.vue';
 
 export default createRouter({
     routes: [

@@ -14,7 +14,7 @@ export default {name: 'RulesPage'}
 </script>
 
 <script setup>
-import RulesItem from '@/components/UI/RulesItem.vue';
+import RulesItem from '@/components/RulesItem.vue';
 
 const rulesList = [
   {

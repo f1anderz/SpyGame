@@ -39,7 +39,7 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
     const locationSuggestion = new LocationSuggestion({
-        _id: new mongoose.Types.ObjectId(), name: req.body.name
+        _id: new mongoose.Types.ObjectId(), name: req.body.locationName
     });
     locationSuggestion.save().then((result) => {
         res.status(201).json({

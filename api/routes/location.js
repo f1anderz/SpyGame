@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Location = require("../models/location");
+const LocationSuggestion = require("../models/locationSuggestion");
 const mongoose = require("mongoose");
 
 router.get('/', (req, res, next) => {
@@ -37,6 +38,21 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    const locationSuggestion = new LocationSuggestion({
+        _id: new mongoose.Types.ObjectId(), name: req.body.name, image: req.body.image
+    });
+    locationSuggestion.save().then((result) => {
+        res.status(201).json({
+            message: "Inserted location with id " + result._id, insertID: result._id
+        });
+    }).catch((err) => {
+        res.status(500).json({
+            error: err
+        });
+    });
+});
+
+router.post('/add', (req, res, next) => {
     const location = new Location({
         _id: new mongoose.Types.ObjectId(), name: req.body.name, image: req.body.image
     });

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const LocationsCollection = require("../models/locationsCollection");
+const LocationsCollectionSuggestion = require("../models/locationsCollectionSuggestion");
 const mongoose = require("mongoose");
 
 router.get('/', (req, res, next) => {
@@ -37,6 +38,21 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    const locationsCollectionSuggestion = new LocationsCollectionSuggestion({
+        _id: new mongoose.Types.ObjectId(), name: req.body.name
+    });
+    locationsCollectionSuggestion.save().then((result) => {
+        res.status(201).json({
+            message: "Inserted Locations Collection with id " + result._id, insertID: result._id
+        });
+    }).catch((err) => {
+        res.status(500).json({
+            error: err
+        });
+    });
+});
+
+router.post('/add', (req, res, next) => {
     const locationsCollection = new LocationsCollection({
         _id: new mongoose.Types.ObjectId(), name: req.body.name
     });

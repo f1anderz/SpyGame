@@ -11,7 +11,7 @@
       <div class="locations-page-collections-header">Available <span class="highlight">collections</span></div>
       <list-locations-collection :collections="collections"/>
     </div>
-    <suggest-form v-if="formMode" :form-mode="formMode"/>
+    <suggest-form v-if="formMode" :form-mode="formMode" @suggestion="suggestMade"/>
     <alert-window :is-hidden="alertHidden" :message="alertMessage"/>
   </div>
 </template>
@@ -39,14 +39,16 @@ const alertMessage = ref('');
 function closeModal(event) {
   if (event.target.classList[0] === 'suggest-page') {
     formMode.value = '';
-  } else if (event.target.classList[0] === 'adaptive-button' || event.target.classList[0] === 'adaptive-button-content') {
-    formMode.value = '';
-    alertMessage.value = 'Suggestion sent'
-    alertHidden.value = false;
-    setTimeout(() => {
-      alertHidden.value = true;
-    }, 750);
   }
+}
+
+function suggestMade() {
+  alertMessage.value = 'Thank you for suggestion !';
+  alertHidden.value = false;
+  setTimeout(() => {
+    alertHidden.value = true;
+  }, 750);
+  formMode.value = '';
 }
 
 onBeforeMount(() => {

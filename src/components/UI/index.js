@@ -6,6 +6,7 @@ import SpyButtonMini from '@/components/UI/SpyButtonMini.vue';
 import SpyInput from '@/components/UI/SpyInput.vue';
 import SpyLinkButton from '@/components/UI/SpyLinkButton.vue';
 import SwitchButton from '@/components/UI/SwitchButton.vue';
+import SpySelectList from '@/components/UI/SpySelectList.vue';
 
 export default [AdaptiveButton, AlertWindow, PasswordInput, SpyButton, SpyButtonMini, SpyInput, SpyLinkButton,
-    SwitchButton];
+    SwitchButton, SpySelectList];

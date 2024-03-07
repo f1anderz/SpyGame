@@ -28,10 +28,9 @@ const props = defineProps({
   opacity: 1;
   transition: opacity .5s ease;
   margin: 0 auto;
-
   top: 1rem;
   font-size: 1.3rem;
-  padding: .3rem 1.5rem;
+  padding: .2rem 1.5rem .3rem;
 }
 
 .hidden {

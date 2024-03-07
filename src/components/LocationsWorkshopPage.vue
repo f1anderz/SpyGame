@@ -73,11 +73,27 @@ onBeforeMount(() => {
   gap: 2rem;
   padding: 5vh 0;
 
+  @include style.breakpoint(xs) {
+    height: 120vh;
+  }
+
+  @include style.breakpoint(s) {
+    height: 210vh;
+  }
+
+  @include style.breakpoint(l) {
+    height: 120vh;
+  }
+
+  @include style.breakpoint(xl) {
+    height: 120vh;
+  }
+
   &-collections {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
     gap: 1rem;
 
     @include style.breakpoint(xs) {

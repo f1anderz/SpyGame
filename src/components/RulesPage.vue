@@ -49,7 +49,7 @@ const rulesList = [
     'the first question is asked, the player who answered it, questions the next player, and so on, until the ' +
     'first player answers a question. After a full circle, players can ask anyone a question except the person who ' +
     'asked them', 'Any player can suspect others at any time, but this action is limited to a certain number ' +
-    '(4-7 people – 1, 7-12 people – 2, 12-16 people – 3). If the majority votes for suspected, a player gets kicked ' +
+    '(4-7 people – 1, 8-11 people – 2, 12-15 people – 3). If the majority votes for suspected, a player gets kicked ' +
     'from a game, if he is not a Spy, the game continues', 'Spy can guess a location at any time by pressing the ' +
     'guess button, if he fails to guess — he loses', 'The game ends with Detectives winning when the Spy gets kicked ' +
     'or guesses the wrong location. The spy wins if guesses the location or the timer goes off']

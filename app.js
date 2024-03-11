@@ -13,6 +13,7 @@ const key = process.env.API_KEY;
 
 const userRoutes = require("./api/routes/user");
 const gameRoutes = require("./api/routes/game");
+const roomRoutes = require('./api/routes/room');
 const locationsCollectionRoutes = require("./api/routes/locationsCollection");
 const locationRoutes = require("./api/routes/location");
 
@@ -39,6 +40,7 @@ app.use((req, res, next) => {
 
 app.use('/users', userRoutes);
 app.use('/games', gameRoutes);
+app.use('/rooms', roomRoutes);
 app.use('/locationsCollections', locationsCollectionRoutes);
 app.use('/locations', locationRoutes);
 

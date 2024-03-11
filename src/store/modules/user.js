@@ -2,18 +2,18 @@ import userAPI from '@/api/user.js';
 import {reactive} from "vue";
 
 const state = reactive({
-    id: '', username: '', isInGame: false
+    _id: '', username: '', isInGame: false
 });
 
 const getters = reactive({
     isUserLoggedIn(state) {
-        return state.id.length > 0;
+        return state.user._id > 0;
     }
 });
 
 const mutations = {
     setID(state, userID) {
-        state.id = userID;
+        state._id = userID;
     }, setUsername(state, username) {
         state.username = username;
     }, joinGame(state) {
@@ -33,7 +33,7 @@ const actions = {
     async setUser(context, userID) {
         let response = await userAPI.getUser(userID);
         context.commit('setID', response.data.user._id);
-        context.commit('setUsername', state.username = response.data.user.username);
+        context.commit('setUsername', response.data.user.username);
     },
     logoutUser(context) {
         context.commit('setID', '');

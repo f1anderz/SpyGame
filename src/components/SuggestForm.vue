@@ -84,7 +84,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, .3);
-  height: 100vh;
+  height: 100%;
   top: 0;
   left: 0;
   width: 100%;

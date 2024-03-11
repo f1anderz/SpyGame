@@ -1,0 +1,28 @@
+import axios from 'axios';
+import api from '@/api/index.js';
+
+export default {
+    async getRoom(roomID) {
+        return await axios.get(`https://spygame.onrender.com/rooms/${roomID}`, {
+            headers: {
+                'x-api-key': api.key
+            }
+        })
+    }, async createRoom(roomInfo) {
+        return await axios.post('https://spygame.onrender.com/rooms', {
+            hostID: roomInfo.host, password: roomInfo.password
+        }, {
+            headers: {
+                'Content-Type': 'application/json', 'x-api-key': api.key
+            }
+        });
+    }, async joinRoom(roomInfo) {
+        return await axios.patch(`https://spygame.onrender.com/rooms/addUser/${roomInfo.roomID}`, {
+            userID: roomInfo.userID, password: roomInfo.password
+        }, {
+            headers: {
+                'Content-Type': 'application/json', 'x-api-key': api.key
+            }
+        })
+    }
+}

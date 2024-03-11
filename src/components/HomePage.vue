@@ -1,14 +1,15 @@
 <template>
-  <div class="spy-home-page">
+  <div class="spy-home-page" @click="closeModal">
     <div class="spy-home-page-title">Spy<span class="highlight">Game</span></div>
     <div class="spy-home-page-games">
       <SpyButton :content="'Join Room'"/>
-      <SpyButton :content="'Create Room'" @button-click="router.push('/SpyGame/create')"/>
+      <SpyButton :content="'Create Room'" @button-click="formVisible = true"/>
     </div>
     <div class="spy-home-page-controls">
       <SpyLinkButton :content="'Locations Workshop'" @link-click="router.push('/SpyGame/locations')"/>
       <SpyLinkButton :content="'Rules'" @link-click="router.push('/SpyGame/rules')"/>
     </div>
+    <create-room-form v-if="formVisible" @room-create="(value)=>{closeModal; router.push(`/SpyGame/room/${value}`)}"/>
   </div>
 </template>
 
@@ -20,14 +21,25 @@ export default {name: 'HomePage'}
 import SpyButton from '@/components/UI/SpyButton.vue';
 import SpyLinkButton from '@/components/UI/SpyLinkButton.vue';
 import {useRouter} from 'vue-router';
+import CreateRoomForm from '@/components/CreateRoomForm.vue';
+import {ref} from 'vue';
 
 const router = useRouter();
+
+const formVisible = ref(false);
+
+function closeModal(event) {
+  if (event.target.classList[0] === 'create-room') {
+    formVisible.value = false;
+  }
+}
 </script>
 
 <style scoped lang="scss">
 @use '@/assets/scss/style';
 
 .spy-home-page {
+  position: relative;
   height: 100vh;
   background: style.$background-color;
   display: flex;

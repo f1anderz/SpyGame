@@ -4,7 +4,7 @@ import AuthPage from "@/components/AuthPage.vue";
 import NotFoundPage from '@/components/NotFoundPage.vue';
 import RulesPage from '@/components/RulesPage.vue';
 import LocationsWorkshopPage from '@/components/LocationsWorkshopPage.vue';
-import CreateRoomPage from '@/components/CreateRoomPage.vue';
+import RoomPage from '@/components/RoomPage.vue';
 
 export default createRouter({
     routes: [
@@ -21,7 +21,7 @@ export default createRouter({
             path: '/SpyGame/locations', component: LocationsWorkshopPage
         },
         {
-            path: '/SpyGame/create', component: CreateRoomPage
+            path: '/SpyGame/room/:id', component: RoomPage
         },
         {
             path: '/:pathMatch(.*)*', component: NotFoundPage

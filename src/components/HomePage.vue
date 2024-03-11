@@ -2,7 +2,7 @@
   <div class="spy-home-page">
     <div class="spy-home-page-title">Spy<span class="highlight">Game</span></div>
     <div class="spy-home-page-games">
-      <SpyButton :content="'Join Room'"/>
+      <SpyButton :content="'Join Room'" @button-click="router.push('/SpyGame/create')"/>
       <SpyButton :content="'Create Room'"/>
     </div>
     <div class="spy-home-page-controls">

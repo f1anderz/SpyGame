@@ -13,6 +13,7 @@ import RulesPage from '@/components/RulesPage.vue';
 import SpyFooter from '@/components/SpyFooter.vue';
 import SpyHeader from '@/components/SpyHeader.vue';
 import SuggestForm from '@/components/SuggestForm.vue';
+import CreateRoomPage from '@/components/CreateRoomPage.vue';
 
 export default [UI, App, AuthPage, HomePage, ListLocations, ListLocationsCollections, Location, LocationsCollection,
-    LocationsWorkshopPage, NotFoundPage, RulesItem, RulesPage, SpyFooter, SpyHeader, SuggestForm];
+    LocationsWorkshopPage, NotFoundPage, RulesItem, RulesPage, SpyFooter, SpyHeader, SuggestForm, CreateRoomPage];

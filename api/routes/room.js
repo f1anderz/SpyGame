@@ -71,7 +71,7 @@ router.patch('/addUser/:id', (req, res, next) => {
                     room.users.push(result._id);
                     room.save().then((result) => {
                         res.status(200).json({
-                            message: "Inserted userID " + req.body.userID + " to room with id " + req.params.id
+                            message: "Inserted userID " + req.body.userID + " to room with id " + req.params.id, room: req.params.id
                         });
                     }).catch((err) => {
                         res.status(500).json({

@@ -9,20 +9,27 @@ export default {
 </script>
 
 <script setup>
-import {ref, watch} from "vue";
+import {onBeforeMount, ref, watch} from "vue";
 
 const emit = defineEmits([
   'dataInput'
 ]);
 
 const props = defineProps({
-  spyPlaceholder: String
+  spyPlaceholder: String,
+  preValue: String
 });
 
 const inputValue = ref('');
 
 watch(inputValue, (newInputValue) => {
   emit('dataInput', newInputValue)
+});
+
+onBeforeMount(() => {
+  if (props.preValue) {
+    inputValue.value = props.preValue
+  }
 });
 </script>
 

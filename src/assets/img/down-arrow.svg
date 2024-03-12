@@ -1,0 +1,11 @@
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+     width="64.000000pt" height="64.000000pt" viewBox="0 0 64.000000 64.000000"
+     preserveAspectRatio="xMidYMid meet">
+
+    <g transform="translate(0.000000,64.000000) scale(0.100000,-0.100000)"
+       >
+        <path fill="#ffffff" d="M10 485 c-7 -8 -10 -25 -7 -37 10 -36 289 -308 317 -308 28 0 307
+272 317 308 3 12 0 29 -7 37 -27 32 -54 16 -182 -112 l-128 -128 -128 128
+c-128 128 -155 144 -182 112z"/>
+    </g>
+</svg>

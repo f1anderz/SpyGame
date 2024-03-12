@@ -1,10 +1,8 @@
 <template>
   <div class="room-page">
-    <div class="room-page-title">Room {{ store.state.room._id }}</div>
-    <div class="room-page-users">Users: {{ store.state.room.users }}</div>
-    <div class="room-page-controls" v-if="isHost">
-      Controls
-    </div>
+    <div class="room-page-title">Room <span class="room-page-title-id">{{ store.state.room._id }}</span></div>
+    <user-list :user-list="store.state.room.users" :is-host="isHost"/>
+    <room-controls v-if="isHost" :collections="collections"/>
   </div>
 </template>
 
@@ -14,14 +12,27 @@ export default {name: 'RoomPage'}
 
 <script setup>
 import {useStore} from 'vuex';
-import {onMounted, ref} from 'vue';
+import {onBeforeMount, onMounted, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
+import UserList from '@/components/UserList.vue';
+import RoomControls from '@/components/RoomControls.vue';
+import api from '@/api/locations.js';
 
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
 
+const collections = ref({});
 const isHost = ref(false);
+
+onBeforeMount(() => {
+  api.getCollections().then((result) => {
+    collections.value.list = result.data.locationsCollection;
+    collections.value.selected = collections.value.list[0];
+  }).catch((err) => {
+    console.log(err)
+  });
+});
 
 onMounted(async () => {
   await store.dispatch('room/getRoom', route.params.id);
@@ -32,11 +43,29 @@ onMounted(async () => {
 <style scoped lang="scss">
 @use '@/assets/scss/style';
 
-.create-room {
+.room-page {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 5vh;
   height: 100vh;
   background: style.$background-color;
+  padding-top: 4vh;
+
+  &-title {
+    font-family: style.$font-body;
+    color: style.$text-color;
+    font-size: 1.2rem;
+    text-align: center;
+
+    @include style.breakpoint(xs){
+      font-size: 1.1rem;
+    }
+
+    &-id {
+      font-family: style.$font-header;
+      color: style.$accent-color;
+    }
+  }
 }
 </style>

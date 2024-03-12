@@ -16,7 +16,9 @@ import SuggestForm from '@/components/SuggestForm.vue';
 import RoomPage from '@/components/RoomPage.vue';
 import CreateRoomForm from '@/components/CreateRoomForm.vue';
 import JoinRoomPage from '@/components/JoinRoomPage.vue';
+import UserList from '@/components/UserList.vue';
+import UserListItem from '@/components/UserListItem.vue';
 
 export default [UI, App, AuthPage, HomePage, ListLocations, ListLocationsCollections, Location, LocationsCollection,
     LocationsWorkshopPage, NotFoundPage, RulesItem, RulesPage, SpyFooter, SpyHeader, SuggestForm, RoomPage,
-    CreateRoomForm, JoinRoomPage];
+    CreateRoomForm, JoinRoomPage, UserList, UserListItem];

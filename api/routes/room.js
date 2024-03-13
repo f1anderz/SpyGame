@@ -60,7 +60,7 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.patch('/addUser/:id', (req, res, next) => {
+router.patch('/join/:id', (req, res, next) => {
     Room.findOne({_id: req.params.id}).exec().then((room) => {
         if (room !== null) {
             if (room.password === req.body.password) {

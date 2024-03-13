@@ -7,7 +7,7 @@
       </div>
       <div class="suggest-page-form-collection" v-else-if="props.formMode === 'C'">
         <spy-input :spy-placeholder="'Collection name...'" @dataInput="(value)=>{collectionName = value}"/>
-        <spy-dropdown :dropdown-options="collectionLocations" @option-select="optionSelected"/>
+        <spy-select-list :select-list-options="collectionLocations" @option-select="optionSelected"/>
       </div>
       <adaptive-button :adapt-value="['Suggest Location','Suggest Collection']" :adapt-property="formMode === 'L'"
                        @adaptive-click="makeSuggestion"/>
@@ -24,7 +24,7 @@ import SpyInput from '@/components/UI/SpyInput.vue';
 import {onMounted, ref} from 'vue';
 import AdaptiveButton from '@/components/UI/AdaptiveButton.vue';
 import api from '@/api/locations.js';
-import SpyDropdown from '@/components/UI/SpySelectList.vue';
+import SpySelectList from '@/components/UI/SpySelectList.vue';
 
 const emit = defineEmits([
   'suggestion'

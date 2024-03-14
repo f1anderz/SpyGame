@@ -2,7 +2,8 @@
   <div class="room-page">
     <div class="room-page-title">Room <span class="room-page-title-id">{{ store.state.room._id }}</span></div>
     <div class="room-page-member" v-if="store.state.user.roomID === route.params.id">
-      <div class="room-page-member-invite" @click="console.log('http://192.168.0.142:5173' + route.fullPath)">Invite friends to room<img src="@/assets/img/invite.svg" alt="Invite"></div>
+      <div class="room-page-member-invite" @click="console.log('http://192.168.0.142:5173' + route.fullPath)">Invite
+        friends to room<img src="@/assets/img/invite.svg" alt="Invite"></div>
       <user-list :user-list="store.state.room.users" :is-host="isHost"/>
       <div class="room-page-member-controls">
         <spy-button-mini :content="'Leave room'" @button-click="leaveRoom"/>
@@ -59,22 +60,42 @@ async function leaveRoom() {
   await router.push('/SpyGame/');
 }
 
-onBeforeMount(() => {
+function getRoomInstant(){
   let roomID = cookies.get('roomID');
   if (roomID) {
     store.commit('user/joinRoom', roomID);
   }
-  locationsAPI.getCollections().then((result) => {
+  locationsAPI.getCollections().then(async (result) => {
     collections.value.list = result.data.locationsCollection;
     collections.value.selected = collections.value.list[0];
+    await store.dispatch('room/getRoom', route.params.id);
+    isHost.value = store.state.room.host._id === store.state.user._id;
+    getRoom();
   }).catch((err) => {
     console.log(err)
   });
-});
+}
+
+function getRoom(){
+  setTimeout(async () => {
+    let roomID = cookies.get('roomID');
+    if (roomID) {
+      store.commit('user/joinRoom', roomID);
+    }
+    locationsAPI.getCollections().then(async (result) => {
+      collections.value.list = result.data.locationsCollection;
+      collections.value.selected = collections.value.list[0];
+      await store.dispatch('room/getRoom', route.params.id);
+      isHost.value = store.state.room.host._id === store.state.user._id;
+      getRoom();
+    }).catch((err) => {
+      console.log(err)
+    });
+  }, 5000);
+}
 
 onMounted(async () => {
-  await store.dispatch('room/getRoom', route.params.id);
-  isHost.value = store.state.room.host._id === store.state.user._id;
+  getRoomInstant()
 });
 </script>
 
@@ -140,9 +161,16 @@ onMounted(async () => {
       }
     }
   }
-}
 
-.room-page-login {
+  &-guest {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 
+    &-header {
+      color: style.$text-color;
+      font-family: style.$font-body;
+    }
+  }
 }
 </style>

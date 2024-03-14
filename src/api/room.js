@@ -7,7 +7,13 @@ export default {
             headers: {
                 'x-api-key': api.key
             }
-        })
+        });
+    }, async getRooms() {
+        return await axios.get(`https://spygame.onrender.com/rooms`, {
+            headers: {
+                'x-api-key': api.key
+            }
+        });
     }, async createRoom(roomInfo) {
         return await axios.post('https://spygame.onrender.com/rooms', {
             hostID: roomInfo.host, password: roomInfo.password

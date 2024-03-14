@@ -19,17 +19,23 @@ export default {
 
 <script setup>
 import {useStore} from 'vuex';
-import {inject, onBeforeMount} from 'vue';
+import {inject, onMounted} from 'vue';
 import SpyFooter from "@/components/SpyFooter.vue";
 import SpyHeader from '@/components/SpyHeader.vue';
 import AuthPage from '@/components/AuthPage.vue';
+import {useRouter} from 'vue-router';
 
 const store = useStore();
 const cookies = inject('$cookies');
+const router = useRouter();
 
-onBeforeMount(async () => {
+onMounted(async () => {
   if (cookies.get('userID')) {
     await store.dispatch('user/setUser', cookies.get('userID'));
+  }
+  if (cookies.get('roomID')) {
+    await store.commit('user/joinRoom', cookies.get('roomID'));
+    await router.push(`/SpyGame/room/${cookies.get('roomID')}`);
   }
 });
 </script>

@@ -114,7 +114,9 @@ router.patch('/leave/:id', (req, res, next) => {
         }).exec().then(() => {
             Room.findOne({_id: req.params.id}).exec().then((result) => {
                 if (result.users.length === 0) {
-                    Room.deleteOne({_id: req.params.id})
+                    Room.deleteOne({_id: req.params.id}).exec().then().catch((err) => {
+                        res.status(500).json(err);
+                    });
                 }
             }).catch((err) => {
                 res.status(500).json(err);

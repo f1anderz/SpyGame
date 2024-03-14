@@ -71,7 +71,8 @@ router.patch('/join/:id', (req, res, next) => {
                     room.users.push(result._id);
                     room.save().then((result) => {
                         res.status(200).json({
-                            message: "Inserted userID " + req.body.userID + " to room with id " + req.params.id, room: req.params.id
+                            message: "Inserted userID " + req.body.userID + " to room with id " + req.params.id,
+                            room: req.params.id
                         });
                     }).catch((err) => {
                         res.status(500).json({
@@ -104,6 +105,23 @@ router.patch('/join/:id', (req, res, next) => {
     });
 });
 
+router.patch('/leave/:id', (req, res, next) => {
+    Room.updateOne({_id: req.params.id}, {
+        $pull: {
+            users: req.body.userID
+        }
+    }).exec().then(() => {
+        RoomUser.deleteOne({_id: req.body.userID}).exec().then((result) => {
+            res.status(200).json('User ' + req.body.userID + ' removed from room ' + req.params.id);
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }).catch((err) => {
+        res.status(500).json(err)
+    });
+
+});
+
 router.patch('/startGame/:id', (req, res, next) => {
     let room = {};
     let featuredLocation;
@@ -131,17 +149,17 @@ router.patch('/startGame/:id', (req, res, next) => {
                         });
                     }).catch((err) => {
                         res.status(500).json({
-                            error: err, message: "Room save"
+                            error: err
                         });
                     });
                 }).catch((err) => {
                     res.status(500).json({
-                        error: err, message: "Game save"
+                        error: err
                     });
                 });
             }).catch((err) => {
                 res.status(500).json({
-                    error: err, message: "LocationsCollection find"
+                    error: err
                 });
             });
         } else {
@@ -153,7 +171,7 @@ router.patch('/startGame/:id', (req, res, next) => {
         }
     }).catch((err) => {
         res.status(500).json({
-            error: err, message: "Room find"
+            error: err
         });
     });
 });

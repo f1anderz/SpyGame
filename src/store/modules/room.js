@@ -25,8 +25,10 @@ const actions = {
         context.commit('setUsers', response.data.room.users);
     }, createRoom(context, roomInfo) {
         return roomAPI.createRoom(roomInfo);
-    }, joinRoom(context, roomInfo) {
-        return roomAPI.joinRoom(roomInfo);
+    }, async joinRoom(context, roomInfo) {
+        return await roomAPI.joinRoom(roomInfo);
+    }, async leaveRoom(context, roomInfo){
+        return await roomAPI.leaveRoom(roomInfo)
     }
 }
 

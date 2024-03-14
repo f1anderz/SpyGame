@@ -2,40 +2,33 @@ import userAPI from '@/api/user.js';
 import {reactive} from "vue";
 
 const state = reactive({
-    _id: '', username: '', isInGame: false
+    _id: '', username: '', roomID: ''
 });
 
-const getters = reactive({
-    isUserLoggedIn(state) {
-        return state.user._id > 0;
-    }
-});
+const getters = reactive({});
 
 const mutations = {
     setID(state, userID) {
         state._id = userID;
     }, setUsername(state, username) {
         state.username = username;
-    }, joinGame(state) {
-        state.isInGame = true;
-    }, leaveGame(state) {
-        state.isInGame = false;
+    }, joinRoom(state, roomID) {
+        state.roomID = roomID;
+    }, leaveRoom(state) {
+        state.roomID = '';
     }
 }
 
 const actions = {
     loginUser(context, loginData) {
         return userAPI.login(loginData);
-    },
-    registerUser(context, registerData){
+    }, registerUser(context, registerData) {
         return userAPI.register(registerData);
-    },
-    async setUser(context, userID) {
+    }, async setUser(context, userID) {
         let response = await userAPI.getUser(userID);
         context.commit('setID', response.data.user._id);
         context.commit('setUsername', response.data.user.username);
-    },
-    logoutUser(context) {
+    }, logoutUser(context) {
         context.commit('setID', '');
         context.commit('setUsername', '');
     }

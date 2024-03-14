@@ -5,7 +5,7 @@
     <div class="spy-header-profile" @click="logoutUser" v-if="store.state.user.username">
       {{ store.state.user.username }}
     </div>
-    <div class="spy-header-profile" @click="router.push('/SpyGame/auth')" v-else>Sign in</div>
+    <div class="spy-header-profile" v-else>Sign in</div>
   </div>
 </template>
 

@@ -1,8 +1,19 @@
 <template>
   <div class="room-page">
     <div class="room-page-title">Room <span class="room-page-title-id">{{ store.state.room._id }}</span></div>
-    <user-list :user-list="store.state.room.users" :is-host="isHost"/>
-    <room-controls v-if="isHost" :collections="collections"/>
+    <div class="room-page-member" v-if="store.state.user.roomID === route.params.id">
+      <div class="room-page-member-invite" @click="console.log('http://192.168.0.142:5173' + route.fullPath)">Invite friends to room<img src="@/assets/img/invite.svg" alt="Invite"></div>
+      <user-list :user-list="store.state.room.users" :is-host="isHost"/>
+      <div class="room-page-member-controls">
+        <spy-button-mini :content="'Leave room'" @button-click="leaveRoom"/>
+      </div>
+      <room-controls v-if="isHost" :collections="collections"/>
+    </div>
+    <div class="room-page-guest" v-else>
+      <div class="room-page-guest-header">Join this room!</div>
+      <spy-input :spy-placeholder="'Room password...'" @data-input="(value)=>{roomPassword = value}"/>
+      <spy-button :content="'Join Room'" @button-click="joinRoom"/>
+    </div>
   </div>
 </template>
 
@@ -12,21 +23,48 @@ export default {name: 'RoomPage'}
 
 <script setup>
 import {useStore} from 'vuex';
-import {onBeforeMount, onMounted, ref} from 'vue';
+import {inject, onBeforeMount, onMounted, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import UserList from '@/components/UserList.vue';
 import RoomControls from '@/components/RoomControls.vue';
-import api from '@/api/locations.js';
+import locationsAPI from '@/api/locations.js';
+import SpyButtonMini from '@/components/UI/SpyButtonMini.vue';
+import SpyInput from '@/components/UI/SpyInput.vue';
+import SpyButton from '@/components/UI/SpyButton.vue';
 
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
+const cookies = inject('$cookies');
 
 const collections = ref({});
 const isHost = ref(false);
+const roomPassword = ref('');
+
+async function joinRoom() {
+  let response = await store.dispatch('room/joinRoom', {
+    roomID: route.params.id,
+    userID: store.state.user._id,
+    password: roomPassword.value
+  });
+  store.commit('user/joinRoom', response.data.room);
+  await store.dispatch('room/getRoom', route.params.id);
+  isHost.value = store.state.room.host._id === store.state.user._id;
+}
+
+async function leaveRoom() {
+  await store.commit('user/leaveRoom');
+  await store.dispatch('room/leaveRoom', {roomID: route.params.id, userID: store.state.user._id})
+  cookies.remove('roomID');
+  await router.push('/SpyGame/');
+}
 
 onBeforeMount(() => {
-  api.getCollections().then((result) => {
+  let roomID = cookies.get('roomID');
+  if (roomID) {
+    store.commit('user/joinRoom', roomID);
+  }
+  locationsAPI.getCollections().then((result) => {
     collections.value.list = result.data.locationsCollection;
     collections.value.selected = collections.value.list[0];
   }).catch((err) => {
@@ -47,7 +85,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5vh;
+  gap: 2vh;
   height: 100vh;
   background: style.$background-color;
   padding-top: 4vh;
@@ -58,7 +96,7 @@ onMounted(async () => {
     font-size: 1.2rem;
     text-align: center;
 
-    @include style.breakpoint(xs){
+    @include style.breakpoint(xs) {
       font-size: 1.1rem;
     }
 
@@ -67,5 +105,44 @@ onMounted(async () => {
       color: style.$accent-color;
     }
   }
+
+  &-member {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5vh;
+
+    &-invite {
+      color: style.$text-color;
+      font-family: style.$font-body;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+
+      & img {
+        width: 1rem;
+        height: 1rem;
+
+        @include style.breakpoint(xxl) {
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+
+      @include style.breakpoint(xxl) {
+        &:hover {
+          color: style.$accent-color;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.room-page-login {
+
 }
 </style>

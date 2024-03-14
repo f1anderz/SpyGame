@@ -17,12 +17,20 @@ export default {
             }
         });
     }, async joinRoom(roomInfo) {
-        return await axios.patch(`https://spygame.onrender.com/rooms/addUser/${roomInfo.roomID}`, {
+        return await axios.patch(`https://spygame.onrender.com/rooms/join/${roomInfo.roomID}`, {
             userID: roomInfo.userID, password: roomInfo.password
         }, {
             headers: {
                 'Content-Type': 'application/json', 'x-api-key': api.key
             }
-        })
+        });
+    }, async leaveRoom(roomInfo) {
+        return await axios.patch(`https://spygame.onrender.com/rooms/leave/${roomInfo.roomID}`, {
+            userID: roomInfo.userID
+        }, {
+            headers: {
+                'Content-Type': 'application/json', 'x-api-key': api.key
+            }
+        });
     }
 }

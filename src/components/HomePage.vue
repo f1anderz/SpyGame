@@ -9,7 +9,7 @@
       <SpyLinkButton :content="'Locations Workshop'" @link-click="router.push('/SpyGame/locations')"/>
       <SpyLinkButton :content="'Rules'" @link-click="router.push('/SpyGame/rules')"/>
     </div>
-    <create-room-form v-if="formVisible" @room-create="(value)=>{closeModal; router.push(`/SpyGame/room/${value}`)}"/>
+    <create-room-form v-if="formVisible" @room-create="joinRoom"/>
   </div>
 </template>
 
@@ -22,11 +22,21 @@ import SpyButton from '@/components/UI/SpyButton.vue';
 import SpyLinkButton from '@/components/UI/SpyLinkButton.vue';
 import {useRouter} from 'vue-router';
 import CreateRoomForm from '@/components/CreateRoomForm.vue';
-import {ref} from 'vue';
+import {inject, ref} from 'vue';
+import {useStore} from 'vuex';
 
+const store = useStore();
 const router = useRouter();
+const cookies = inject('$cookies');
 
 const formVisible = ref(false);
+
+function joinRoom(value) {
+  store.commit('user/joinRoom', value);
+  cookies.set('roomID', value, "1d");
+  router.push(`/SpyGame/room/${value}`);
+  formVisible.value = false;
+}
 
 function closeModal(event) {
   if (event.target.classList[0] === 'create-room') {

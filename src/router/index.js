@@ -1,10 +1,10 @@
 import {createRouter, createWebHistory} from "vue-router";
 import HomePage from "@/components/HomePage.vue";
-import AuthPage from "@/components/AuthPage.vue";
 import NotFoundPage from '@/components/NotFoundPage.vue';
 import RulesPage from '@/components/RulesPage.vue';
 import LocationsWorkshopPage from '@/components/LocationsWorkshopPage.vue';
 import RoomPage from '@/components/RoomPage.vue';
+import JoinRoomPage from '@/components/JoinRoomPage.vue';
 
 export default createRouter({
     routes: [
@@ -12,13 +12,13 @@ export default createRouter({
             path: '/SpyGame', component: HomePage,
         },
         {
-            path: '/SpyGame/auth', component: AuthPage
-        },
-        {
             path: '/SpyGame/rules', component: RulesPage
         },
         {
             path: '/SpyGame/locations', component: LocationsWorkshopPage
+        },
+        {
+            path: '/SpyGame/join', component: JoinRoomPage
         },
         {
             path: '/SpyGame/room/:id', component: RoomPage

@@ -117,11 +117,6 @@ router.patch('/leave/:id', (req, res, next) => {
                     Room.deleteOne({_id: req.params.id}).exec().then().catch((err) => {
                         res.status(500).json(err);
                     });
-                    RoomUser.deleteOne({user: req.body.userID}).exec().then((result) => {
-                        res.status(200).json('User ' + req.body.userID + ' removed from room ' + req.params.id);
-                    }).catch((err) => {
-                        res.status(500).json(err);
-                    });
                 } else if (result.host === req.body.userID) {
                     Room.findOne({_id: req.params.id}).exec().then((result) => {
                         result.users.forEach((user) => {
@@ -142,6 +137,11 @@ router.patch('/leave/:id', (req, res, next) => {
                         res.status(500).json(err);
                     });
                 }
+            }).catch((err) => {
+                res.status(500).json(err);
+            });
+            RoomUser.deleteOne({user: req.body.userID}).exec().then((result) => {
+                res.status(200).json('User ' + req.body.userID + ' removed from room ' + req.params.id);
             }).catch((err) => {
                 res.status(500).json(err);
             });

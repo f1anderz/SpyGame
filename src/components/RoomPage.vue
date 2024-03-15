@@ -76,6 +76,7 @@ async function leaveRoom() {
 
 async function getRoomInstant() {
   let roomID = cookies.get('roomID');
+  console.log(roomID)
   if (roomID) {
     store.commit('user/joinRoom', roomID);
     locationsAPI.getCollections().then(async (result) => {

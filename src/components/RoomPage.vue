@@ -53,6 +53,7 @@ async function joinRoom() {
     password: roomPassword.value
   });
   store.commit('user/joinRoom', response.data.room);
+  cookies.set('roomID', response.data.room);
   await store.dispatch('room/getRoom', route.params.id);
   isHost.value = store.state.room.host._id === store.state.user._id;
 }
@@ -86,13 +87,6 @@ async function getRoomInstant() {
     }).catch((err) => {
       console.log(err)
     });
-  } else {
-    message.value = 'Host closed room';
-    isHidden.value = false;
-    await router.push('/SpyGame/');
-    setTimeout(() => {
-      isHidden.value = true;
-    }, 750);
   }
 }
 
@@ -104,25 +98,28 @@ function getRoom() {
       locationsAPI.getCollections().then(async (result) => {
         collections.value.list = result.data.locationsCollection;
         collections.value.selected = collections.value.list[0];
-        await store.dispatch('room/getRoom', route.params.id);
-        isHost.value = store.state.room.host._id === store.state.user._id;
-        getRoom();
+        let roomIDCheck = await store.dispatch('room/getRoom', route.params.id);
+        if (roomIDCheck) {
+          isHost.value = store.state.room.host._id === store.state.user._id;
+          getRoom();
+        } else {
+          await leaveRoom();
+          message.value = 'Host closed room';
+          isHidden.value = false;
+          await router.push('/SpyGame/');
+          setTimeout(() => {
+            isHidden.value = true;
+          }, 750);
+        }
       }).catch((err) => {
         console.log(err)
       });
-    } else {
-      message.value = 'Host closed room';
-      isHidden.value = false;
-      await router.push('/SpyGame/');
-      setTimeout(() => {
-        isHidden.value = true;
-      }, 750);
     }
   }, 5000);
 }
 
 onMounted(async () => {
-  getRoomInstant()
+  await getRoomInstant()
 });
 </script>
 

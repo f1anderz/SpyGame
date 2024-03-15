@@ -23,6 +23,7 @@ const actions = {
         let response = await roomAPI.getRoom(context.state._id);
         context.commit('setHost', response.data.room.host);
         context.commit('setUsers', response.data.room.users);
+        return response.data.room._id;
     }, createRoom(context, roomInfo) {
         return roomAPI.createRoom(roomInfo);
     }, async joinRoom(context, roomInfo) {

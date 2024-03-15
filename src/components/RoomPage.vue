@@ -73,28 +73,10 @@ async function leaveRoom() {
   await router.push('/SpyGame/');
 }
 
-function getRoomInstant() {
+async function getRoomInstant() {
   let roomID = cookies.get('roomID');
   if (roomID) {
     store.commit('user/joinRoom', roomID);
-  }
-  locationsAPI.getCollections().then(async (result) => {
-    collections.value.list = result.data.locationsCollection;
-    collections.value.selected = collections.value.list[0];
-    await store.dispatch('room/getRoom', route.params.id);
-    isHost.value = store.state.room.host._id === store.state.user._id;
-    getRoom();
-  }).catch((err) => {
-    console.log(err)
-  });
-}
-
-function getRoom() {
-  setTimeout(async () => {
-    let roomID = cookies.get('roomID');
-    if (roomID) {
-      store.commit('user/joinRoom', roomID);
-    }
     locationsAPI.getCollections().then(async (result) => {
       collections.value.list = result.data.locationsCollection;
       collections.value.selected = collections.value.list[0];
@@ -104,6 +86,38 @@ function getRoom() {
     }).catch((err) => {
       console.log(err)
     });
+  } else {
+    message.value = 'Host closed room';
+    isHidden.value = false;
+    await router.push('/SpyGame/');
+    setTimeout(() => {
+      isHidden.value = true;
+    }, 750);
+  }
+}
+
+function getRoom() {
+  setTimeout(async () => {
+    let roomID = cookies.get('roomID');
+    if (roomID) {
+      store.commit('user/joinRoom', roomID);
+      locationsAPI.getCollections().then(async (result) => {
+        collections.value.list = result.data.locationsCollection;
+        collections.value.selected = collections.value.list[0];
+        await store.dispatch('room/getRoom', route.params.id);
+        isHost.value = store.state.room.host._id === store.state.user._id;
+        getRoom();
+      }).catch((err) => {
+        console.log(err)
+      });
+    } else {
+      message.value = 'Host closed room';
+      isHidden.value = false;
+      await router.push('/SpyGame/');
+      setTimeout(() => {
+        isHidden.value = true;
+      }, 750);
+    }
   }, 5000);
 }
 

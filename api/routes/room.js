@@ -118,24 +118,26 @@ router.patch('/leave/:id', (req, res, next) => {
                         res.status(500).json(err);
                     });
                 } else if (result.host === req.body.userID) {
-                    Room.findOne({_id: req.params.id}).exec().then((result) => {
-                        result.users.forEach((user) => {
-                            RoomUser.deleteOne({_id: user._id}).exec().then().catch((err) => {
-                                res.status(500).json(err);
-                            });
-                        });
-                    }).catch((err) => {
-                        res.status(500).json(err);
-                    });
-                    Room.updateOne({_id: req.params.id}, {
-                        $pull: {
-                            users: {}
-                        }
-                    }).exec().then(() => {
-                        res.status(200).json('User ' + req.body.userID + ' removed from room ' + req.params.id);
-                    }).catch((err) => {
-                        res.status(500).json(err);
-                    });
+                    // Room.findOne({_id: req.params.id}).exec().then((result) => {
+                    //     result.users.forEach((user) => {
+                    //         RoomUser.deleteOne({_id: user._id}).exec().then().catch((err) => {
+                    //             res.status(500).json(err);
+                    //         });
+                    //     });
+                    // }).catch((err) => {
+                    //     res.status(500).json(err);
+                    // });
+                    // Room.updateOne({_id: req.params.id}, {
+                    //     $pull: {
+                    //         users: {}
+                    //     }
+                    // }).exec().then(() => {
+                    //     res.status(200).json('User ' + req.body.userID + ' removed from room ' + req.params.id);
+                    // }).catch((err) => {
+                    //     res.status(500).json(err);
+                    // });
+                    console.log('Host drop')
+                    res.status(500).json('hostdrop');
                 }
             }).catch((err) => {
                 res.status(500).json(err);

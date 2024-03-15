@@ -2,7 +2,7 @@
   <div class="room-page">
     <div class="room-page-title">Room <span class="room-page-title-id">{{ store.state.room._id }}</span></div>
     <div class="room-page-member" v-if="store.state.user.roomID === route.params.id">
-      <div class="room-page-member-invite" @click="console.log('http://192.168.0.142:5173' + route.fullPath)">Invite
+      <div class="room-page-member-invite" @click="copyRoom">Invite
         friends to room<img src="@/assets/img/invite.svg" alt="Invite"></div>
       <user-list :user-list="store.state.room.users" :is-host="isHost"/>
       <div class="room-page-member-controls">
@@ -15,6 +15,7 @@
       <spy-input :spy-placeholder="'Room password...'" @data-input="(value)=>{roomPassword = value}"/>
       <spy-button :content="'Join Room'" @button-click="joinRoom"/>
     </div>
+    <alert-window :message="message" :is-hidden="isHidden"/>
   </div>
 </template>
 
@@ -32,6 +33,7 @@ import locationsAPI from '@/api/locations.js';
 import SpyButtonMini from '@/components/UI/SpyButtonMini.vue';
 import SpyInput from '@/components/UI/SpyInput.vue';
 import SpyButton from '@/components/UI/SpyButton.vue';
+import AlertWindow from '@/components/UI/AlertWindow.vue';
 
 const store = useStore();
 const router = useRouter();
@@ -40,7 +42,9 @@ const cookies = inject('$cookies');
 
 const collections = ref({});
 const isHost = ref(false);
+const isHidden = ref(true);
 const roomPassword = ref('');
+const message = ref('');
 
 async function joinRoom() {
   let response = await store.dispatch('room/joinRoom', {
@@ -53,6 +57,14 @@ async function joinRoom() {
   isHost.value = store.state.room.host._id === store.state.user._id;
 }
 
+async function copyRoom() {
+  isHidden.value = false;
+  await navigator.clipboard.writeText('https://f1anderz.github.io/SpyGame' + route.fullPath);
+  setTimeout(() => {
+    isHidden.value = true;
+  }, 750);
+}
+
 async function leaveRoom() {
   await store.commit('user/leaveRoom');
   await store.dispatch('room/leaveRoom', {roomID: route.params.id, userID: store.state.user._id})
@@ -60,7 +72,7 @@ async function leaveRoom() {
   await router.push('/SpyGame/');
 }
 
-function getRoomInstant(){
+function getRoomInstant() {
   let roomID = cookies.get('roomID');
   if (roomID) {
     store.commit('user/joinRoom', roomID);
@@ -76,7 +88,7 @@ function getRoomInstant(){
   });
 }
 
-function getRoom(){
+function getRoom() {
   setTimeout(async () => {
     let roomID = cookies.get('roomID');
     if (roomID) {

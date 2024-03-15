@@ -58,7 +58,7 @@ async function joinRoom() {
 }
 
 async function copyRoom() {
-  message.value = 'Invite Link copied'
+  message.value = 'Invite Link copied';
   isHidden.value = false;
   await navigator.clipboard.writeText('https://f1anderz.github.io/SpyGame' + route.fullPath);
   setTimeout(() => {

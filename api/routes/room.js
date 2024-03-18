@@ -22,7 +22,7 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
     Room.findOne({_id: req.params.id}).populate({
         path: 'currentGame', populate: {path: 'spy', populate: {path: 'user', select: ['_id', 'username']}}
-    }).populate({path: 'host', select: ['_id', 'username']}).populate({
+    }).populate({
         path: 'users', populate: {path: 'user', select: ['_id', 'username']}
     }).exec().then((result) => {
         res.status(200).json({
@@ -36,17 +36,17 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    const room = new Room({
-        _id: new mongoose.Types.ObjectId(), users: [], host: req.body.hostID, password: req.body.password
-    });
     let roomUser = new RoomUser({
-        _id: new mongoose.Types.ObjectId(), user: req.body.hostID, score: 0, suspectsLeft: 0
+        _id: new mongoose.Types.ObjectId(), user: req.body.hostID, score: 0, suspectsLeft: 0, isHost: true
+    });
+    const room = new Room({
+        _id: new mongoose.Types.ObjectId(), users: [], password: req.body.password
     });
     roomUser.save().then((result) => {
         room.users.push(result._id);
         room.save().then((result) => {
             res.status(201).json({
-                message: "Inserted room with id " + result._id, insertID: result._id
+                message: "Inserted room with id " + result._id, roomID: result._id
             });
         }).catch((err) => {
             res.status(500).json({
@@ -72,7 +72,7 @@ router.patch('/join/:id', (req, res, next) => {
                     room.save().then((result) => {
                         res.status(200).json({
                             message: "Inserted userID " + req.body.userID + " to room with id " + req.params.id,
-                            room: req.params.id
+                            roomID: req.params.id
                         });
                     }).catch((err) => {
                         res.status(500).json({
@@ -107,44 +107,52 @@ router.patch('/join/:id', (req, res, next) => {
 
 router.patch('/leave/:id', (req, res, next) => {
     RoomUser.findOne({user: req.body.userID}).exec().then((result) => {
-        Room.updateOne({_id: req.params.id}, {
-            $pull: {
-                users: result._id
-            }
-        }).exec().then(() => {
-            Room.findOne({_id: req.params.id}).exec().then((result) => {
-                if (result.users.length === 0) {
-                    Room.deleteOne({_id: req.params.id}).exec().then().catch((err) => {
-                        res.status(500).json(err);
-                    });
-                }
-                Room.findOne({_id: req.params.id, host: req.body.userID}).exec().then((result) => {
+        if (result) {
+            if (result.isHost) {
+                Room.findOne({_id: req.params.id}).exec().then((result) => {
                     if (result) {
                         result.users.forEach((user) => {
                             RoomUser.deleteOne({_id: user._id}).exec().then().catch((err) => {
                                 res.status(500).json(err);
                             });
                         });
-                        Room.deleteOne({_id: req.params.id}).exec().then(()=>{
-                            res.status(200).json('User ' + req.body.userID + ' removed from room ' + req.params.id);
+                        Room.deleteOne({_id: req.params.id}).exec().then(() => {
+                            res.status(200).json(`User ${req.body.userID} removed from room ${req.params.id}`);
                         }).catch((err) => {
                             res.status(500).json(err);
                         });
+                    } else {
+                        res.status(404).json({message: `Room with id ${req.params.id} not found`})
                     }
                 }).catch((err) => {
                     res.status(500).json(err);
                 });
-            }).catch((err) => {
-                res.status(500).json(err);
+            } else {
+                Room.updateOne({_id: req.params.id}, {
+                    $pull: {
+                        users: result._id
+                    }
+                }).exec().then((result) => {
+                    if (result.modifiedCount === 1) {
+                        RoomUser.deleteOne({user: req.body.userID}).exec().then(() => {
+                            res.status(200).json(`User ${req.body.userID} removed from room ${req.params.id}`);
+                        }).catch((err) => {
+                            res.status(500).json({error: err, message: 'RoomUserDelete'});
+                        });
+                    } else {
+                        res.status(404).json({
+                            message: `User with id ${req.body.userID} not found in room ${req.params.id}`
+                        });
+                    }
+                }).catch((err) => {
+                    res.status(500).json({error: err, message: 'RoomUpdate'});
+                });
+            }
+        } else {
+            res.status(404).json({
+                message: `User with id ${req.body.userID} not found in any room`
             });
-            RoomUser.deleteOne({user: req.body.userID}).exec().then((result) => {
-                res.status(200).json('User ' + req.body.userID + ' removed from room ' + req.params.id);
-            }).catch((err) => {
-                res.status(500).json(err);
-            });
-        }).catch((err) => {
-            res.status(500).json(err);
-        });
+        }
     }).catch((err) => {
         res.status(500).json(err);
     });

@@ -7,11 +7,6 @@ const roomSchema = new mongoose.Schema({
         required: true,
         ref: "RoomUser"
     }],
-    host:{
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "User"
-    },
     currentGame: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Game"

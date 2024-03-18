@@ -13,6 +13,10 @@ const roomUserSchema = new mongoose.Schema({
     suspectsLeft: {
         type: Number,
         required: true
+    },
+    isHost: {
+        type: Boolean,
+        required: false
     }
 });
 

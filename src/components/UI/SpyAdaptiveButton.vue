@@ -33,13 +33,17 @@ const emit = defineEmits(['adaptiveClick']);
   font-family: style.$font-body;
   padding: .1rem 1.5rem .2rem;
 
-  @include style.breakpoint(xxl) {
-    padding: .2rem 2.5rem .3rem;
+  &-content{
+    @include style.breakpoint(xxl) {
+      padding: .2rem 2.5rem .3rem;
 
-    &:hover {
-      color: style.$accent-color;
-      cursor: pointer;
+      &:hover {
+        color: style.$accent-color;
+        cursor: pointer;
+      }
     }
   }
+
+
 }
 </style>

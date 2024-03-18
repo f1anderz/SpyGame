@@ -72,18 +72,12 @@ function registerUser() {
     password: password.value
   }).then((response) => {
     cookies.set('user', response.data.user, "30d");
-    store.dispatch('user/setUser', response.data.user);
+    store.commit('user/setUser', response.data.user);
     message.value = '';
   }).catch((err) => {
     message.value = err.response.data.error.message;
-  })
+  });
 }
-
-onMounted(() => {
-  if (cookies.get('userID')) {
-    router.push('/SpyGame/');
-  }
-});
 </script>
 
 <style scoped lang="scss">

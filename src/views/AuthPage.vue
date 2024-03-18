@@ -57,10 +57,9 @@ function loginUser() {
     login: login.value,
     password: password.value
   }).then((response) => {
-    cookies.set('userID', response.data.userID, "30d");
-    store.dispatch('user/setUser', response.data.userID);
+    cookies.set('user', response.data.user, "30d");
+    store.commit('user/setUser', response.data.user);
     message.value = '';
-    router.push('/SpyGame/');
   }).catch((err) => {
     message.value = err.response.data.error.message;
   });
@@ -72,10 +71,9 @@ function registerUser() {
     username: username.value,
     password: password.value
   }).then((response) => {
-    cookies.set('userID', response.data.insertID, "30d");
-    store.dispatch('user/setUser', response.data.insertID);
+    cookies.set('user', response.data.user, "30d");
+    store.dispatch('user/setUser', response.data.user);
     message.value = '';
-    router.push('/SpyGame/');
   }).catch((err) => {
     message.value = err.response.data.error.message;
   })

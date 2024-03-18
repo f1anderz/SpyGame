@@ -5,13 +5,16 @@ const state = reactive({
     _id: '', username: '', roomID: ''
 });
 
-const getters = reactive({});
+const getters = reactive({
+    isLoggedIn: (state) => {
+        return state._id.length > 0;
+    }
+});
 
 const mutations = {
-    setID(state, userID) {
-        state._id = userID;
-    }, setUsername(state, username) {
-        state.username = username;
+    setUser(state, user) {
+        state._id = user._id;
+        state.username = user.username;
     }, joinRoom(state, roomID) {
         state.roomID = roomID;
     }, leaveRoom(state) {
@@ -24,10 +27,9 @@ const actions = {
         return userAPI.login(loginData);
     }, registerUser(context, registerData) {
         return userAPI.register(registerData);
-    }, async setUser(context, userID) {
-        await userAPI.getUser(userID);
     }, logoutUser(context) {
-
+        context.state._id = '';
+        context.state.username = '';
     }
 }
 

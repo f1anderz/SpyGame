@@ -3,8 +3,8 @@
     <spy-header/>
   </header>
   <main>
-    <router-view v-if="store.state.user._id"/>
-    <auth-page v-else/>
+    <auth-page v-if="!(store.getters['user/isLoggedIn'])"/>
+    <router-view v-else/>
   </main>
   <footer>
     <spy-footer/>
@@ -19,7 +19,7 @@ export default {
 
 <script setup>
 import {useStore} from 'vuex';
-import {inject} from 'vue';
+import {inject, onBeforeMount} from 'vue';
 import SpyFooter from "@/components/SpyFooter.vue";
 import SpyHeader from '@/components/SpyHeader.vue';
 import AuthPage from '@/views/AuthPage.vue';
@@ -29,7 +29,11 @@ const store = useStore();
 const cookies = inject('$cookies');
 const router = useRouter();
 
-
+onBeforeMount(() => {
+  if (cookies.isKey('user')) {
+    store.commit('user/setUser', cookies.get('user'));
+  }
+});
 </script>
 
 <style lang="scss">

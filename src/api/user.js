@@ -18,11 +18,5 @@ export default {
                 'Content-Type': 'application/json', 'x-api-key': api.key
             }
         });
-    }, async getUser(id) {
-        return await axios.get(`${api.link}/users/${id}`, {
-            headers: {
-                'x-api-key': api.key
-            }
-        });
     }
 }

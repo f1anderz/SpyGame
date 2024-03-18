@@ -28,7 +28,7 @@ const cookies = inject('$cookies');
 
 function logoutUser() {
   store.dispatch('user/logoutUser').then(() => {
-    cookies.remove('userID');
+    cookies.remove('user');
   }).catch((err) => {
     console.log(err);
   });

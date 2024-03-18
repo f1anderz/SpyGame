@@ -2,7 +2,7 @@
   <div class="rooms-list">
     <transition-group name="rooms-list">
       <rooms-list-item v-for="room in props.rooms" :room="room" :key="room._id"
-                       @click="router.push('/SpyGame/room/' + room._id)"/>
+                       @click="router.push(`/room/${room._id}`)"/>
     </transition-group>
   </div>
 </template>

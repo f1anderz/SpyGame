@@ -20,6 +20,8 @@ const mutations = {
 const actions = {
     async getRoom(context, roomID) {
         return await roomAPI.getRoom(roomID);
+    },async getRooms(context) {
+        return await roomAPI.getRooms();
     }, async createRoom(context, roomInfo) {
         return await roomAPI.createRoom(roomInfo);
     }, async joinRoom(context, roomInfo) {

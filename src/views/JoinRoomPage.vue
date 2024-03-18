@@ -22,6 +22,12 @@ const store = useStore();
 const router = useRouter();
 
 const rooms = ref([]);
+
+onMounted(async () => {
+  store.dispatch('room/getRooms').then((response) => {
+    rooms.value = response.data.rooms;
+  });
+});
 </script>
 
 <style scoped lang="scss">

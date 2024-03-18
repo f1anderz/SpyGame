@@ -3,19 +3,19 @@ import api from '@/api';
 
 export default {
     async getCollections() {
-        return await axios.get('https://spygame.onrender.com/locationsCollections', {
+        return await axios.get(`${api.link}/locationsCollections`, {
             headers: {
                 'x-api-key': api.key
             }
         });
     }, async getCollection(collectionID) {
-        return await axios.get(`https://spygame.onrender.com/locationsCollections/${collectionID}`, {
+        return await axios.get(`${api.link}/locationsCollections/${collectionID}`, {
             headers: {
                 'x-api-key': api.key
             }
         });
     }, async postCollection(collection) {
-        return await axios.post('https://spygame.onrender.com/locationsCollections', {
+        return await axios.post(`${api.link}/locationsCollections`, {
             collectionName: collection.name, locations: collection.locations
         }, {
             headers: {
@@ -23,19 +23,19 @@ export default {
             }
         });
     }, async getLocations() {
-        return await axios.get('https://spygame.onrender.com/locations', {
+        return await axios.get(`${api.link}/locations`, {
             headers: {
                 'x-api-key': api.key
             }
         });
     }, async getLocation(locationID) {
-        return await axios.get(`https://spygame.onrender.com/locations/${locationID}`, {
+        return await axios.get(`${api.link}/locations/${locationID}`, {
             headers: {
                 'x-api-key': api.key
             }
         });
     }, async postLocation(locationName) {
-        return await axios.post('https://spygame.onrender.com/locations', {
+        return await axios.post(`${api.link}/locations`, {
             locationName: locationName
         }, {
             headers: {

@@ -2,18 +2,18 @@
   <div class="room-page">
     <div class="room-page-title">Room <span class="room-page-title-id">{{ store.state.room._id }}</span></div>
     <div class="room-page-member" v-if="store.state.user.roomID === route.params.id">
-      <div class="room-page-member-invite" @click="copyRoom">Invite
-        friends to room<img src="@/assets/img/invite.svg" alt="Invite"></div>
+      <div class="room-page-member-invite" @click="">Invite
+        friends to room<img src="../assets/img/invite.svg" alt="Invite"></div>
       <user-list :user-list="store.state.room.users" :is-host="isHost"/>
       <div class="room-page-member-controls">
-        <spy-button-mini :content="'Leave room'" @button-click="leaveRoom"/>
+        <spy-button-mini :content="'Leave room'" @button-click=""/>
       </div>
       <room-controls v-if="isHost" :collections="collections"/>
     </div>
     <div class="room-page-guest" v-else>
       <div class="room-page-guest-header">Join this room!</div>
       <spy-input :spy-placeholder="'Room password...'" @data-input="(value)=>{roomPassword = value}"/>
-      <spy-button :content="'Join Room'" @button-click="joinRoom"/>
+      <spy-button :content="'Join Room'" @button-click=""/>
     </div>
     <alert-window :message="message" :is-hidden="isHidden"/>
   </div>
@@ -29,11 +29,10 @@ import {inject, onMounted, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import UserList from '@/components/UserList.vue';
 import RoomControls from '@/components/RoomControls.vue';
-import locationsAPI from '@/api/locations.js';
 import SpyButtonMini from '@/components/UI/SpyButtonMini.vue';
 import SpyInput from '@/components/UI/SpyInput.vue';
 import SpyButton from '@/components/UI/SpyButton.vue';
-import AlertWindow from '@/components/UI/AlertWindow.vue';
+import AlertWindow from '@/components/UI/SpyAlertWindow.vue';
 
 const store = useStore();
 const router = useRouter();
@@ -46,82 +45,6 @@ const isHidden = ref(true);
 const roomPassword = ref('');
 const message = ref('');
 
-async function joinRoom() {
-  let response = await store.dispatch('room/joinRoom', {
-    roomID: route.params.id,
-    userID: store.state.user._id,
-    password: roomPassword.value
-  });
-  store.commit('user/joinRoom', response.data.room);
-  cookies.set('roomID', response.data.room);
-  await store.dispatch('room/getRoom', route.params.id);
-  isHost.value = store.state.room.host._id === store.state.user._id;
-}
-
-async function copyRoom() {
-  message.value = 'Invite Link copied';
-  isHidden.value = false;
-  await navigator.clipboard.writeText('https://f1anderz.github.io/SpyGame' + route.fullPath);
-  setTimeout(() => {
-    isHidden.value = true;
-  }, 750);
-}
-
-async function leaveRoom() {
-  await store.commit('user/leaveRoom');
-  await store.dispatch('room/leaveRoom', {roomID: route.params.id, userID: store.state.user._id})
-  cookies.remove('roomID');
-  await router.push('/SpyGame/');
-}
-
-async function getRoomInstant() {
-  let roomID = cookies.get('roomID');
-  console.log(roomID)
-  if (roomID) {
-    store.commit('user/joinRoom', roomID);
-    locationsAPI.getCollections().then(async (result) => {
-      collections.value.list = result.data.locationsCollection;
-      collections.value.selected = collections.value.list[0];
-      await store.dispatch('room/getRoom', route.params.id);
-      isHost.value = store.state.room.host._id === store.state.user._id;
-      getRoom();
-    }).catch((err) => {
-      console.log(err)
-    });
-  }
-}
-
-function getRoom() {
-  setTimeout(async () => {
-    let roomID = cookies.get('roomID');
-    if (roomID) {
-      store.commit('user/joinRoom', roomID);
-      locationsAPI.getCollections().then(async (result) => {
-        collections.value.list = result.data.locationsCollection;
-        collections.value.selected = collections.value.list[0];
-        let roomIDCheck = await store.dispatch('room/getRoom', route.params.id);
-        if (roomIDCheck) {
-          isHost.value = store.state.room.host._id === store.state.user._id;
-          getRoom();
-        } else {
-          await leaveRoom();
-          message.value = 'Host closed room';
-          isHidden.value = false;
-          await router.push('/SpyGame/');
-          setTimeout(() => {
-            isHidden.value = true;
-          }, 750);
-        }
-      }).catch((err) => {
-        console.log(err)
-      });
-    }
-  }, 5000);
-}
-
-onMounted(async () => {
-  await getRoomInstant()
-});
 </script>
 
 <style scoped lang="scss">

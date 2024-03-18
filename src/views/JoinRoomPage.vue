@@ -22,31 +22,6 @@ const store = useStore();
 const router = useRouter();
 
 const rooms = ref([]);
-
-function getRoomsInstant(){
-  roomAPI.getRooms().then((result) => {
-    rooms.value = result.data.rooms;
-    getRooms();
-  }).catch((err) => {
-    console.log(err)
-  });
-  getRooms();
-}
-
-function getRooms() {
-  setTimeout(()=>{
-    roomAPI.getRooms().then((result) => {
-      rooms.value = result.data.rooms;
-      getRooms();
-    }).catch((err) => {
-      console.log(err)
-    });
-  }, 5000);
-}
-
-onMounted(() => {
-  getRoomsInstant();
-});
 </script>
 
 <style scoped lang="scss">

@@ -25,7 +25,7 @@
 
 <script>
 import SpyInput from "@/components/UI/SpyInput.vue";
-import PasswordInput from "@/components/UI/PasswordInput.vue";
+import PasswordInput from "@/components/UI/SpyPasswordInput.vue";
 
 export default {
   name: 'AuthPage',
@@ -37,8 +37,8 @@ export default {
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import {inject, onMounted, ref} from "vue";
-import SwitchButton from "@/components/UI/SwitchButton.vue";
-import AdaptiveButton from "@/components/UI/AdaptiveButton.vue";
+import SwitchButton from "@/components/UI/SpySwitchButton.vue";
+import AdaptiveButton from "@/components/UI/SpyAdaptiveButton.vue";
 
 const store = useStore();
 const router = useRouter();

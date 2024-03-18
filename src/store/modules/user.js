@@ -25,12 +25,9 @@ const actions = {
     }, registerUser(context, registerData) {
         return userAPI.register(registerData);
     }, async setUser(context, userID) {
-        let response = await userAPI.getUser(userID);
-        context.commit('setID', response.data.user._id);
-        context.commit('setUsername', response.data.user.username);
+        await userAPI.getUser(userID);
     }, logoutUser(context) {
-        context.commit('setID', '');
-        context.commit('setUsername', '');
+
     }
 }
 

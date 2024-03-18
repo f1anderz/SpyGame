@@ -27,7 +27,7 @@ import {onBeforeMount, ref} from 'vue';
 import api from '@/api/locations.js';
 import ListLocationsCollection from '@/components/ListLocationsCollections.vue';
 import SuggestForm from '@/components/SuggestForm.vue';
-import AlertWindow from '@/components/UI/AlertWindow.vue';
+import AlertWindow from '@/components/UI/SpyAlertWindow.vue';
 
 const collections = ref([]);
 

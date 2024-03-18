@@ -4,7 +4,7 @@
       <span class="spy-rules-page-header-reset"> Rules</span>
     </div>
     <transition-group name="rules-list">
-      <RulesItem v-for="rule in rulesList" :rule="rule" :key="rule.id"/>
+      <rules-item v-for="rule in rulesList" :rule="rule" :key="rule.id"/>
     </transition-group>
   </div>
 </template>

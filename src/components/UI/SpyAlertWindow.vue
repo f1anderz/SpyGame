@@ -5,7 +5,7 @@
 </template>
 
 <script>
-export default {name: 'AlertWindow'}
+export default {name: 'SpyAlertWindow'}
 </script>
 
 <script setup>

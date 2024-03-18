@@ -6,7 +6,7 @@
 </template>
 
 <script>
-export default {name: "AdaptiveButton"}
+export default {name: "SpyAdaptiveButton"}
 </script>
 
 <script setup>

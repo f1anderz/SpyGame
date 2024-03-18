@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "SwitchButton"
+  name: "SpySwitchButton"
 }
 </script>
 

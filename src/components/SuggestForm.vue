@@ -9,7 +9,7 @@
         <spy-input :spy-placeholder="'Collection name...'" @dataInput="(value)=>{collectionName = value}"/>
         <spy-select-list :select-list-options="collectionLocations" @option-select="optionSelected"/>
       </div>
-      <adaptive-button :adapt-value="['Suggest Location','Suggest Collection']" :adapt-property="formMode === 'L'"
+      <spy-adaptive-button :adapt-value="['Suggest Location','Suggest Collection']" :adapt-property="formMode === 'L'"
                        @adaptive-click="makeSuggestion"/>
     </div>
   </div>
@@ -22,7 +22,7 @@ export default {name: 'SuggestForm'}
 <script setup>
 import SpyInput from '@/components/UI/SpyInput.vue';
 import {onMounted, ref} from 'vue';
-import AdaptiveButton from '@/components/UI/AdaptiveButton.vue';
+import SpyAdaptiveButton from '@/components/UI/SpyAdaptiveButton.vue';
 import api from '@/api/locations.js';
 import SpySelectList from '@/components/UI/SpySelectList.vue';
 

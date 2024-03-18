@@ -44,7 +44,7 @@ router.post('/', (req, res, next) => {
         });
         user.save().then((result) => {
             res.status(201).json({
-                message: "Inserted user with id " + result._id, insertID: result._id
+                message: "Inserted user with id " + result._id, user: {_id: result._id, username: result.username}
             });
         }).catch((err) => {
             res.status(422).json({
@@ -60,7 +60,8 @@ router.post('/login', (req, res, next) => {
             bcrypt.compare(req.body.password, doc.password, (err, response) => {
                 if (response) {
                     res.status(200).json({
-                        message: "Login successful for user with id" + doc._id, userID: doc._id
+                        message: "Login successful for user with id" + doc._id,
+                        user: {_id: doc._id, username: doc.username}
                     });
                 } else {
                     res.status(401).json({

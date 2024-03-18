@@ -28,12 +28,6 @@ export default {
                 'x-api-key': api.key
             }
         });
-    }, async getLocation(locationID) {
-        return await axios.get(`${api.link}/locations/${locationID}`, {
-            headers: {
-                'x-api-key': api.key
-            }
-        });
     }, async postLocation(locationName) {
         return await axios.post(`${api.link}/locations`, {
             locationName: locationName

@@ -33,6 +33,9 @@ onBeforeMount(() => {
   if (cookies.isKey('user')) {
     store.commit('user/setUser', cookies.get('user'));
   }
+  if (cookies.isKey('roomID')) {
+    store.commit('user/joinRoom', cookies.get('roomID'));
+  }
 });
 </script>
 

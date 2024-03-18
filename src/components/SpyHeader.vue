@@ -1,7 +1,7 @@
 <template>
   <div class="spy-header">
-    <img class="spy-header-icon" src="@/assets/img/favicon.svg" alt="SpyGameIcon" @click="router.push('/SpyGame/')">
-    <div class="spy-header-name" @click="router.push('/SpyGame/')">SpyGame</div>
+    <img class="spy-header-icon" src="@/assets/img/favicon.svg" alt="SpyGameIcon" @click="returnToMain">
+    <div class="spy-header-name" @click="returnToMain">SpyGame</div>
     <div class="spy-header-profile" @click="logoutUser" v-if="store.state.user.username">
       {{ store.state.user.username }}
     </div>
@@ -17,7 +17,7 @@ export default {
 
 <script setup>
 import {useStore} from 'vuex';
-import {inject} from 'vue';
+import {inject, ref} from 'vue';
 import {useRouter} from "vue-router";
 
 const store = useStore();
@@ -25,6 +25,21 @@ const router = useRouter();
 
 const cookies = inject('$cookies');
 
+async function returnToMain() {
+  if (cookies.isKey('roomID')) {
+    if (confirm('Do you want to leave a room?')) {
+      await store.commit('user/leaveRoom');
+      await store.dispatch('room/leaveRoom', {
+        roomID: cookies.get('roomID'),
+        userID: store.state.user._id
+      });
+      cookies.remove('roomID');
+      await router.push('/');
+    }
+  } else {
+    await router.push('/');
+  }
+}
 
 function logoutUser() {
   store.dispatch('user/logoutUser').then(() => {

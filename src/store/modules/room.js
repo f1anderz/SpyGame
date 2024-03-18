@@ -25,7 +25,7 @@ const actions = {
     }, async joinRoom(context, roomInfo) {
         return await roomAPI.joinRoom(roomInfo);
     }, async leaveRoom(context, roomInfo) {
-        return await roomAPI.leaveRoom(roomInfo)
+        return await roomAPI.leaveRoom(roomInfo);
     }
 }
 

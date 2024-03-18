@@ -2,14 +2,14 @@
   <div class="spy-home-page" @click="closeModal">
     <div class="spy-home-page-title">Spy<span class="highlight">Game</span></div>
     <div class="spy-home-page-games">
-      <SpyButton :content="'Join Room'" @button-click="router.push('/SpyGame/join')"/>
+      <SpyButton :content="'Join Room'" @button-click="router.push('/join')"/>
       <SpyButton :content="'Create Room'" @button-click="formVisible = true"/>
     </div>
     <div class="spy-home-page-controls">
-      <SpyLinkButton :content="'Locations Workshop'" @link-click="router.push('/SpyGame/locations')"/>
-      <SpyLinkButton :content="'Rules'" @link-click="router.push('/SpyGame/rules')"/>
+      <SpyLinkButton :content="'Locations Workshop'" @link-click="router.push('/locations')"/>
+      <SpyLinkButton :content="'Rules'" @link-click="router.push('/rules')"/>
     </div>
-    <create-room-form v-if="formVisible" @room-create=""/>
+    <create-room-form v-if="formVisible" @room-create="roomCreated"/>
   </div>
 </template>
 
@@ -30,6 +30,13 @@ const router = useRouter();
 const cookies = inject('$cookies');
 
 const formVisible = ref(false);
+
+function roomCreated(roomID) {
+  cookies.set('roomID', roomID);
+  store.commit('user/joinRoom', roomID);
+  formVisible.value = false;
+  router.push(`/room/${roomID}`);
+}
 
 function closeModal(event) {
   if (event.target.classList[0] === 'create-room') {

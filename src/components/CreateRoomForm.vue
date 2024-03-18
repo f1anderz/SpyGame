@@ -24,7 +24,7 @@ const password = ref('');
 
 async function createRoom() {
   let result = await store.dispatch('room/createRoom', {host: store.state.user._id, password: password.value});
-  emit('roomCreate', result.data.insertID);
+  emit('roomCreate', result.data.roomID);
 }
 </script>
 

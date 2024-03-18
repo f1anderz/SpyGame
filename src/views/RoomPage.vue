@@ -1,19 +1,20 @@
 <template>
   <div class="room-page">
-    <div class="room-page-title">Room <span class="room-page-title-id">{{ store.state.room._id }}</span></div>
+    <div class="room-page-title">Room <span class="room-page-title-id">{{ route.params.id }}</span></div>
     <div class="room-page-member" v-if="store.state.user.roomID === route.params.id">
       <div class="room-page-member-invite" @click="">Invite
         friends to room<img src="../assets/img/invite.svg" alt="Invite"></div>
       <user-list :user-list="store.state.room.users" :is-host="isHost"/>
       <div class="room-page-member-controls">
-        <spy-button-mini :content="'Leave room'" @button-click=""/>
+        <spy-button-mini :content="'Leave room'" @button-click="leaveRoom"/>
       </div>
       <room-controls v-if="isHost" :collections="collections"/>
     </div>
     <div class="room-page-guest" v-else>
       <div class="room-page-guest-header">Join this room!</div>
+      <div class="room-page-guest-error" v-if="message">{{ message }}</div>
       <spy-input :spy-placeholder="'Room password...'" @data-input="(value)=>{roomPassword = value}"/>
-      <spy-button :content="'Join Room'" @button-click=""/>
+      <spy-button :content="'Join Room'" @button-click="joinRoom"/>
     </div>
     <alert-window :message="message" :is-hidden="isHidden"/>
   </div>
@@ -45,6 +46,41 @@ const isHidden = ref(true);
 const roomPassword = ref('');
 const message = ref('');
 
+async function joinRoom() {
+  store.dispatch('room/joinRoom', {
+    roomID: route.params.id,
+    userID: store.state.user._id,
+    password: roomPassword.value
+  }).then((result) => {
+    cookies.set('roomID', result.data.roomID);
+    store.commit('user/joinRoom', result.data.roomID);
+  }).catch((err) => {
+    message.value = err.response.data.error.message;
+  });
+}
+
+async function leaveRoom() {
+  await store.commit('user/leaveRoom');
+  await store.dispatch('room/leaveRoom', {
+    roomID: cookies.get('roomID'),
+    userID: store.state.user._id
+  });
+  cookies.remove('roomID');
+  await router.push('/')
+}
+
+async function getRoomInitial() {
+  let result = await store.dispatch('room/getRoom', route.params.id);
+  if (result.data.room) {
+
+  } else {
+
+  }
+}
+
+onMounted(() => {
+  getRoomInitial();
+});
 </script>
 
 <style scoped lang="scss">
@@ -117,6 +153,12 @@ const message = ref('');
 
     &-header {
       color: style.$text-color;
+      font-family: style.$font-body;
+    }
+
+    &-error {
+      padding-left: .5rem;
+      color: red;
       font-family: style.$font-body;
     }
   }

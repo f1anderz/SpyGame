@@ -20,7 +20,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-    Room.findOne({_id: req.params.id}).populate({
+    Room.findOne({_id: req.params.id}).select('_id users').populate({
         path: 'currentGame', populate: {path: 'spy', populate: {path: 'user', select: ['_id', 'username']}}
     }).populate({
         path: 'users', populate: {path: 'user', select: ['_id', 'username']}

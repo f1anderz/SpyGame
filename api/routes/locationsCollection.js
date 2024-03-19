@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 router.get('/', (req, res, next) => {
     LocationsCollection.find({}).populate('locations').exec().then((result) => {
         res.status(200).json({
-            message: "Fetched all Locations Collections", locationsCollection: result
+            message: "Fetched all Locations Collections", collections: result
         });
     }).catch((err) => {
         res.status(500).json({

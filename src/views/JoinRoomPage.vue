@@ -23,10 +23,24 @@ const router = useRouter();
 
 const rooms = ref([]);
 
+function getRooms() {
+  if(!(store.getters['user/isInRoom'])) {
+    setTimeout(() => {
+      store.dispatch('room/getRooms').then((response) => {
+        if (rooms.value !== response.data.rooms) {
+          rooms.value = response.data.rooms;
+        }
+      });
+      getRooms();
+    }, 5000);
+  }
+}
+
 onMounted(async () => {
   store.dispatch('room/getRooms').then((response) => {
     rooms.value = response.data.rooms;
   });
+  getRooms();
 });
 </script>
 

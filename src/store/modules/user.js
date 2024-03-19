@@ -1,5 +1,5 @@
 import userAPI from '@/api/user.js';
-import {reactive} from "vue";
+import {reactive, registerRuntimeCompiler} from "vue";
 
 const state = reactive({
     _id: '', username: '', roomID: ''
@@ -8,6 +8,9 @@ const state = reactive({
 const getters = reactive({
     isLoggedIn: (state) => {
         return state._id.length > 0;
+    },
+    isInRoom: (state)=>{
+        return state.roomID.length > 0;
     }
 });
 

@@ -1,9 +1,11 @@
 <template>
   <div class="user-list-item">
-    <div class="user-list-item-nickname">{{ props.user.user.username }}</div>
+    <div class="user-list-item-nickname">{{ props.user.user.username }}
+      <img src="@/assets/img/crown.svg" alt="Host" v-if="props.user.isHost">
+    </div>
     <div class="user-list-item-score">{{ props.user.score }}</div>
     <div class="user-list-item-controls" v-if="props.isHost">
-
+      Controls
     </div>
   </div>
 </template>
@@ -37,7 +39,16 @@ const props = defineProps({
   }
 
   &-nickname {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
 
+    & img {
+      width: 1rem;
+      height: 1rem;
+      margin-top: .2rem;
+    }
   }
 
   &-score {

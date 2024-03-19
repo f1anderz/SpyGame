@@ -8,7 +8,7 @@
     <div class="spy-dropdown-container" :class="{'dropdown-open': dropdownOpen}">
       <div class="spy-dropdown-container-options">
         <transition-group name="spy-dropdown-options">
-          <div class="spy-dropdown-container-options-item" v-for="option in props.dropdownOptions.list"
+          <div class="spy-dropdown-container-options-item" v-for="option in props.dropdownOptions"
                @click="selected = option; dropdownOpen = !dropdownOpen" :key="option._id"> {{ option.name }}
           </div>
         </transition-group>
@@ -22,20 +22,21 @@ export default {name: 'SpyDropdown'}
 </script>
 
 <script setup>
-
-import {onMounted, ref, watch} from 'vue';
+import {onBeforeMount, ref, watch} from 'vue';
 
 const emit = defineEmits(['optionSelect']);
 
 const props = defineProps({
-  dropdownOptions: Object
+  dropdownOptions: Array
 });
 
 const dropdownOpen = ref(false);
 const selected = ref({});
 
-onMounted(() => {
-  selected.value = props.dropdownOptions.selected
+onBeforeMount(() => {
+  setTimeout(() => {
+    selected.value = props.dropdownOptions[0];
+  }, 250);
 });
 
 watch(selected, (newSelected) => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="alert-window" :class="{ hidden: props.isHidden }">
+  <div class="spy-alert-window" :class="{ hidden: props.isHidden }">
     {{ props.message }}
   </div>
 </template>
@@ -18,7 +18,7 @@ const props = defineProps({
 <style scoped lang="scss">
 @use '@/assets/scss/style';
 
-.alert-window{
+.spy-alert-window{
   position: absolute;
   text-align: center;
   background: style.$secondary-background-color;

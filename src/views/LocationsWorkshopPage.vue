@@ -53,7 +53,7 @@ function suggestMade() {
 
 onBeforeMount(() => {
   api.getCollections().then((result) => {
-    collections.value = result.data.locationsCollection;
+    collections.value = result.data.collections;
   }).catch((err) => {
     console.log(err)
   });

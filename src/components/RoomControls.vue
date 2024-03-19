@@ -7,9 +7,7 @@
         <spy-checkbox :option="{name: 'Till guess', checked: endless}" @selected="()=>{endless = !endless}"/>
       </div>
     </div>
-    <div class="room-controls-collection">
-      <spy-dropdown :dropdown-options="props.collections" @option-select="(value)=>{collection = value}"/>
-    </div>
+    <spy-dropdown :dropdown-options="collections" @option-select="(value)=>{collection = value}"/>
     <spy-button :content="'Start Game'"/>
   </div>
 </template>
@@ -22,20 +20,22 @@ export default {name: 'RoomControls'}
 import SpyButton from '@/components/UI/SpyButton.vue';
 import SpyInput from '@/components/UI/SpyInput.vue';
 import SpyCheckbox from '@/components/UI/SpyCheckbox.vue';
-import {onMounted, ref} from 'vue';
 import SpyDropdown from '@/components/UI/SpyDropdown.vue';
-
-const props = defineProps({
-  collections: Object
-});
+import {onBeforeMount, ref} from 'vue';
+import locationsAPI from '@/api/locations.js';
 
 const time = ref('10');
 const endless = ref(false);
 const collection = ref({});
+const collections = ref([]);
 
-onMounted(() => {
-  collection.value = props.collections.selected
-});
+onBeforeMount(() => {
+  locationsAPI.getCollections().then((response) => {
+    collections.value = response.data.collections;
+  }).catch((err) => {
+    console.log(err);
+  })
+})
 </script>
 
 <style scoped lang="scss">

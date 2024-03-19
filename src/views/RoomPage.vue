@@ -16,7 +16,7 @@
       <spy-input :spy-placeholder="'Room password...'" @data-input="(value)=>{roomPassword = value}"/>
       <spy-button :content="'Join Room'" @button-click="joinRoom"/>
     </div>
-    <alert-window :message="message" :is-hidden="isHidden"/>
+    <alert-window :message="alertMessage" :is-hidden="isHidden"/>
   </div>
 </template>
 
@@ -40,11 +40,12 @@ const router = useRouter();
 const route = useRoute();
 const cookies = inject('$cookies');
 
-const collections = ref({});
 const isHost = ref(false);
 const isHidden = ref(true);
 const roomPassword = ref('');
 const message = ref('');
+const alertMessage = ref('');
+const collections = ref([]);
 
 async function joinRoom() {
   store.dispatch('room/joinRoom', {
@@ -54,6 +55,7 @@ async function joinRoom() {
   }).then((result) => {
     cookies.set('roomID', result.data.roomID);
     store.commit('user/joinRoom', result.data.roomID);
+    getRoom();
   }).catch((err) => {
     message.value = err.response.data.error.message;
   });
@@ -69,17 +71,46 @@ async function leaveRoom() {
   await router.push('/')
 }
 
-async function getRoomInitial() {
-  let result = await store.dispatch('room/getRoom', route.params.id);
-  if (result.data.room) {
-
-  } else {
-
+async function getRoom() {
+  if (store.getters['user/isInRoom']) {
+    setTimeout(() => {
+      store.dispatch('room/getRoom', route.params.id).then((response) => {
+        if (response.data.room) {
+          store.commit('room/setID', response.data.room._id);
+          store.commit('room/setUsers', response.data.room.users);
+          getRoom();
+        } else {
+          isHidden.value = false;
+          store.commit('user/leaveRoom');
+          cookies.remove('roomID');
+          alertMessage.value = 'Host closed room';
+          setTimeout(() => {
+            isHidden.value = true;
+            router.push('/')
+          }, 750);
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+    }, 2500);
   }
 }
 
-onMounted(() => {
-  getRoomInitial();
+onMounted(async () => {
+  store.dispatch('room/getRoom', route.params.id).then((response) => {
+    if (response.data.room) {
+      store.commit('room/setID', response.data.room._id);
+      store.commit('room/setUsers', response.data.room.users);
+      if (store.getters['room/getHostID'] === store.state.user._id) {
+        isHost.value = true;
+      }
+      getRoom();
+    } else {
+      console.log("No room")
+    }
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 </script>
 
@@ -149,7 +180,13 @@ onMounted(() => {
   &-guest {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
+    margin: 0 auto;
+
+    & .spy-input {
+      background: style.$secondary-background-color;
+    }
 
     &-header {
       color: style.$text-color;
@@ -161,6 +198,10 @@ onMounted(() => {
       color: red;
       font-family: style.$font-body;
     }
+  }
+
+  & .spy-alert-window{
+    background: style.$background-color;
   }
 }
 </style>

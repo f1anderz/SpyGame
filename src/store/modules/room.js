@@ -2,16 +2,24 @@ import roomAPI from '@/api/room.js'
 import {reactive} from 'vue';
 
 const state = reactive({
-    _id: '', users: [], host: '',
+    _id: '', users: []
 });
 
-const getters = {};
+const getters = reactive({
+    getHostID: (state) => {
+        let hostID = '';
+        state.users.forEach((user) => {
+            if (user.isHost) {
+                hostID = user.user._id;
+            }
+        });
+        return hostID;
+    }
+});
 
 const mutations = {
     setID(state, roomID) {
         state._id = roomID;
-    }, setHost(state, hostID) {
-        state.host = hostID;
     }, setUsers(state, users) {
         state.users = users;
     }
@@ -20,7 +28,7 @@ const mutations = {
 const actions = {
     async getRoom(context, roomID) {
         return await roomAPI.getRoom(roomID);
-    },async getRooms(context) {
+    }, async getRooms() {
         return await roomAPI.getRooms();
     }, async createRoom(context, roomInfo) {
         return await roomAPI.createRoom(roomInfo);

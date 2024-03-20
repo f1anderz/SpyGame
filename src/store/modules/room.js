@@ -2,7 +2,7 @@ import roomAPI from '@/api/room.js'
 import {reactive} from 'vue';
 
 const state = reactive({
-    _id: '', users: []
+    _id: '', users: [], gameID: ''
 });
 
 const getters = reactive({
@@ -14,6 +14,8 @@ const getters = reactive({
             }
         });
         return hostID;
+    }, roomInGame: (state) => {
+        return state.gameID.length > 0;
     }
 });
 
@@ -22,6 +24,10 @@ const mutations = {
         state._id = roomID;
     }, setUsers(state, users) {
         state.users = users;
+    }, setGame(state, gameID) {
+        state.gameID = gameID;
+    }, endGame(state) {
+        state.gameID = '';
     }
 }
 
@@ -38,6 +44,8 @@ const actions = {
         return await roomAPI.leaveRoom(roomInfo);
     }, async kickUser(context, kickInfo) {
         return await roomAPI.kickUser(kickInfo);
+    }, async startGame(context, gameInfo) {
+        return await roomAPI.startGame(gameInfo);
     }
 }
 

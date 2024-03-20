@@ -38,9 +38,17 @@ export default {
                 'Content-Type': 'application/json', 'x-api-key': api.key
             }
         });
-    }, async kickUser(kickInfo){
+    }, async kickUser(kickInfo) {
         return await axios.patch(`${api.link}/rooms/kick/${kickInfo.roomID}`, {
             userID: kickInfo.userID
+        }, {
+            headers: {
+                'Content-Type': 'application/json', 'x-api-key': api.key
+            }
+        });
+    }, async startGame(gameInfo) {
+        return await axios.patch(`${api.link}/rooms/startGame/${gameInfo.roomID}`, {
+            collectionID: gameInfo.collectionID, endless: gameInfo.endless, roundTime: gameInfo.time
         }, {
             headers: {
                 'Content-Type': 'application/json', 'x-api-key': api.key

@@ -12,6 +12,8 @@ export default createRouter({
     }, {
         path: '/room/:id', name: 'room', component: () => import('@/views/RoomPage.vue')
     }, {
+        path: '/game/:id', name: 'game', component: () => import('@/views/GamePage.vue')
+    }, {
         path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/views/NotFoundPage.vue')
     }]
 });

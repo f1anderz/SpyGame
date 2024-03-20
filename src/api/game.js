@@ -1,12 +1,12 @@
+import axios from 'axios';
+import api from '@/api/index.js';
+
 export default {
-    createGame(user) {
-
-    },
-    joinGame(user, game) {
-
-    }
-    ,
-    leaveGame(user, game) {
-
+    async getGame(gameID) {
+        return await axios.get(`${api.link}/games/${gameID}`, {
+            headers: {
+                'x-api-key': api.key
+            }
+        });
     }
 }

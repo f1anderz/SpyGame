@@ -2,6 +2,7 @@
   <div class="room-page">
     <div class="room-page-title">Room <span class="room-page-title-id">{{ route.params.id }}</span></div>
     <div class="room-page-member" v-if="store.state.user.roomID === route.params.id">
+      <div class="room-page-member-announcement" v-if="store.getters['room/roomInGame']">Room currently in game</div>
       <div class="room-page-member-invite"
            @click="navigator.clipboard.writeText(`https://f1anderz.github.io/SpyGame/${route.fullPath}`);">Invite
         friends to room<img src="../assets/img/invite.svg" alt="Invite"></div>
@@ -69,6 +70,7 @@ async function leaveRoom() {
     userID: store.state.user._id
   });
   cookies.remove('roomID');
+  cookies.remove('gameID');
   await router.push('/')
 }
 
@@ -79,9 +81,10 @@ function kickUser(event) {
 }
 
 async function getRoom() {
+
   if (store.getters['user/isInRoom']) {
     setTimeout(() => {
-      store.dispatch('room/getRoom', route.params.id).then((response) => {
+      store.dispatch('room/getRoom', store.state.room._id).then(async (response) => {
         if (response.data.room) {
           let flag = false;
           response.data.room.users.forEach((user) => {
@@ -90,13 +93,27 @@ async function getRoom() {
             }
           });
           if (flag) {
-            store.commit('room/setID', response.data.room._id);
-            store.commit('room/setUsers', response.data.room.users);
-            getRoom();
+            await store.commit('room/setID', response.data.room._id);
+            await store.commit('room/setUsers', response.data.room.users);
+            if (response.data.room.currentGame) {
+              cookies.set('gameID', response.data.room.currentGame._id);
+              store.commit('room/setGame', response.data.room.currentGame._id);
+              let userInGame = false;
+              response.data.room.currentGame.users.forEach((user) => {
+                if (user.user._id === store.state.user._id) {
+                  userInGame = true;
+                }
+              });
+              if (userInGame) {
+                await router.push(`/game/${response.data.room.currentGame._id}`);
+              }
+            }
+            await getRoom();
           } else {
             isHidden.value = false;
             store.commit('user/leaveRoom');
             cookies.remove('roomID');
+            cookies.remove('gameID');
             alertMessage.value = 'You were kicked';
             setTimeout(() => {
               isHidden.value = true;
@@ -107,6 +124,7 @@ async function getRoom() {
           isHidden.value = false;
           store.commit('user/leaveRoom');
           cookies.remove('roomID');
+          cookies.remove('gameID');
           alertMessage.value = 'Host closed room';
           setTimeout(() => {
             isHidden.value = true;
@@ -172,6 +190,12 @@ onMounted(async () => {
     flex-direction: column;
     align-items: center;
     gap: 5vh;
+
+    &-announcement {
+      color: style.$text-color;
+      font-family: style.$font-body;
+      text-align: center;
+    }
 
     &-invite {
       color: style.$text-color;

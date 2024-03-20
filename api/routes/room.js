@@ -21,7 +21,8 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
     Room.findOne({_id: req.params.id}).select('_id users').populate({
-        path: 'currentGame', populate: {path: 'spy', populate: {path: 'user', select: ['_id', 'username']}}
+        path: 'currentGame', populate: [{path: 'spy', populate: {path: 'user', select: ['_id', 'username']}},
+            {path: 'users', populate: {path: 'user', select: ['_id']}}]
     }).populate({
         path: 'users', populate: {path: 'user', select: ['_id', 'username']}
     }).exec().then((result) => {
@@ -63,31 +64,39 @@ router.post('/', (req, res, next) => {
 router.patch('/join/:id', (req, res, next) => {
     Room.findOne({_id: req.params.id}).exec().then((room) => {
         if (room !== null) {
-            if (room.password === req.body.password) {
-                let roomUser = new RoomUser({
-                    _id: new mongoose.Types.ObjectId(), user: req.body.userID, score: 0, suspectsLeft: 0
-                });
-                roomUser.save().then((result) => {
-                    room.users.push(result._id);
-                    room.save().then((result) => {
-                        res.status(200).json({
-                            message: "Inserted userID " + req.body.userID + " to room with id " + req.params.id,
-                            roomID: req.params.id
+            if (room.users.length < 16) {
+                if (room.password === req.body.password) {
+                    let roomUser = new RoomUser({
+                        _id: new mongoose.Types.ObjectId(), user: req.body.userID, score: 0, suspectsLeft: 0
+                    });
+                    roomUser.save().then((result) => {
+                        room.users.push(result._id);
+                        room.save().then((result) => {
+                            res.status(200).json({
+                                message: "Inserted userID " + req.body.userID + " to room with id " + req.params.id,
+                                roomID: req.params.id
+                            });
+                        }).catch((err) => {
+                            res.status(500).json({
+                                error: err
+                            });
                         });
                     }).catch((err) => {
                         res.status(500).json({
                             error: err
                         });
                     });
-                }).catch((err) => {
-                    res.status(500).json({
-                        error: err
+                } else {
+                    res.status(401).json({
+                        error: {
+                            message: "Incorrect room password"
+                        }
                     });
-                });
+                }
             } else {
-                res.status(401).json({
+                res.status(400).json({
                     error: {
-                        message: "Incorrect room password"
+                        message: "Room full"
                     }
                 });
             }
@@ -115,6 +124,9 @@ router.patch('/leave/:id', (req, res, next) => {
                             RoomUser.deleteOne({_id: user._id}).exec().then().catch((err) => {
                                 res.status(500).json(err);
                             });
+                        });
+                        Game.deleteOne({_id: result.currentGame}).exec().then().catch((err) => {
+                            res.status(500).json(err);
                         });
                         Room.deleteOne({_id: req.params.id}).exec().then(() => {
                             res.status(200).json(`User ${req.body.userID} removed from room ${req.params.id}`);
@@ -191,29 +203,36 @@ router.patch('/kick/:id', (req, res, next) => {
 });
 
 router.patch('/startGame/:id', (req, res, next) => {
-    let room = {};
     let featuredLocation;
-    Room.findOne({_id: req.params.id}).populate('users').exec().then((result) => {
-        if (result !== null) {
-            room = result;
-            LocationsCollection.findOne({_id: req.body.locationsCollectionID}).exec().then(async (result) => {
-                featuredLocation = result.locations[Math.round(Math.random() * result.locations.length)];
-                let spy = room.users[Math.round(Math.random() * room.users.length)];
-                const game = new Game({
-                    _id: new mongoose.Types.ObjectId(),
-                    spy: spy._id,
-                    locationsCollection: req.body.locationsCollectionID,
-                    featuredLocation: featuredLocation
-                });
-                game.save().then((result) => {
-                    room.currentGame = result._id;
-                    room.users.forEach((user) => {
-                        user.suspectsLeft = Math.floor(room.users.length / 4);
+    Room.findOne({_id: req.params.id}).populate('users').exec().then((room) => {
+        if (room !== null) {
+            if (room.users.length >= 4) {
+                LocationsCollection.findOne({_id: req.body.collectionID}).exec().then(async (result) => {
+                    featuredLocation = result.locations[Math.round(Math.random() * result.locations.length)];
+                    let spy = room.users[Math.round(Math.random() * room.users.length)];
+                    const game = new Game({
+                        _id: new mongoose.Types.ObjectId(),
+                        spy: spy._id,
+                        users: room.users,
+                        locationsCollection: req.body.collectionID,
+                        featuredLocation: featuredLocation,
+                        endless: req.body.endless,
+                        roundTime: req.body.roundTime
                     });
-                    room.save().then((result) => {
-                        res.status(200).json({
-                            message: "Inserted game " + room.currentGame + " to room with id " + result._id,
-                            data: result
+                    game.save().then((result) => {
+                        room.currentGame = result._id;
+                        room.users.forEach((user) => {
+                            user.suspectsLeft = Math.floor(room.users.length / 4);
+                        });
+                        room.save().then((result) => {
+                            res.status(200).json({
+                                message: "Inserted game " + result.currentGame + " to room with id " + result._id,
+                                room: result
+                            });
+                        }).catch((err) => {
+                            res.status(500).json({
+                                error: err
+                            });
                         });
                     }).catch((err) => {
                         res.status(500).json({
@@ -225,11 +244,13 @@ router.patch('/startGame/:id', (req, res, next) => {
                         error: err
                     });
                 });
-            }).catch((err) => {
+            } else {
                 res.status(500).json({
-                    error: err
+                    error: {
+                        message: "You need at least 4 users to start a game"
+                    }
                 });
-            });
+            }
         } else {
             res.status(404).json({
                 error: {

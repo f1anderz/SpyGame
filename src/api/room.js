@@ -38,5 +38,13 @@ export default {
                 'Content-Type': 'application/json', 'x-api-key': api.key
             }
         });
+    }, async kickUser(kickInfo){
+        return await axios.patch(`${api.link}/rooms/kick/${kickInfo.roomID}`, {
+            userID: kickInfo.userID
+        }, {
+            headers: {
+                'Content-Type': 'application/json', 'x-api-key': api.key
+            }
+        });
     }
 }

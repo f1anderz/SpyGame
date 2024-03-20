@@ -2,9 +2,10 @@
   <div class="room-page">
     <div class="room-page-title">Room <span class="room-page-title-id">{{ route.params.id }}</span></div>
     <div class="room-page-member" v-if="store.state.user.roomID === route.params.id">
-      <div class="room-page-member-invite" @click="">Invite
+      <div class="room-page-member-invite"
+           @click="navigator.clipboard.writeText(`https://f1anderz.github.io/SpyGame/${route.fullPath}`);">Invite
         friends to room<img src="../assets/img/invite.svg" alt="Invite"></div>
-      <user-list :user-list="store.state.room.users" :is-host="isHost"/>
+      <user-list :user-list="store.state.room.users" :is-host="isHost" @kick-user="kickUser"/>
       <div class="room-page-member-controls">
         <spy-button-mini :content="'Leave room'" @button-click="leaveRoom"/>
       </div>
@@ -71,14 +72,37 @@ async function leaveRoom() {
   await router.push('/')
 }
 
+function kickUser(event) {
+  store.dispatch('room/kickUser', {roomID: route.params.id, userID: event}).then().catch((err) => {
+    console.log(err)
+  });
+}
+
 async function getRoom() {
   if (store.getters['user/isInRoom']) {
     setTimeout(() => {
       store.dispatch('room/getRoom', route.params.id).then((response) => {
         if (response.data.room) {
-          store.commit('room/setID', response.data.room._id);
-          store.commit('room/setUsers', response.data.room.users);
-          getRoom();
+          let flag = false;
+          response.data.room.users.forEach((user) => {
+            if (user.user._id === store.state.user._id) {
+              flag = true;
+            }
+          });
+          if (flag) {
+            store.commit('room/setID', response.data.room._id);
+            store.commit('room/setUsers', response.data.room.users);
+            getRoom();
+          } else {
+            isHidden.value = false;
+            store.commit('user/leaveRoom');
+            cookies.remove('roomID');
+            alertMessage.value = 'You were kicked';
+            setTimeout(() => {
+              isHidden.value = true;
+              router.push('/')
+            }, 750);
+          }
         } else {
           isHidden.value = false;
           store.commit('user/leaveRoom');
@@ -200,7 +224,7 @@ onMounted(async () => {
     }
   }
 
-  & .spy-alert-window{
+  & .spy-alert-window {
     background: style.$background-color;
   }
 }

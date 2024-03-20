@@ -1,7 +1,8 @@
 <template>
   <div class="user-list">
     <transition-group name="user-list">
-      <user-list-item v-for="user in props.userList" :user="user" :key="user._id" :is-host="props.isHost"/>
+      <user-list-item v-for="user in props.userList" :user="user" :key="user._id" :is-host="props.isHost"
+                      @kick-user="(value)=>{emit('kickUser', value)}"/>
     </transition-group>
   </div>
 </template>
@@ -13,6 +14,7 @@ export default {name: 'UserList'}
 <script setup>
 import UserListItem from '@/components/UserListItem.vue';
 
+const emit = defineEmits(['kickUser']);
 const props = defineProps({
   userList: Array,
   isHost: Boolean
@@ -29,19 +31,19 @@ const props = defineProps({
   justify-content: center;
   margin: 0 auto;
 
-  @include style.breakpoint(xs){
+  @include style.breakpoint(xs) {
     width: 80%;
   }
 
-  @include style.breakpoint(l){
+  @include style.breakpoint(l) {
     width: 50%;
   }
 
-  @include style.breakpoint(xl){
+  @include style.breakpoint(xl) {
     width: 40%;
   }
 
-  @include style.breakpoint(xxl){
+  @include style.breakpoint(xxl) {
     width: 35%;
   }
 }

@@ -158,6 +158,38 @@ router.patch('/leave/:id', (req, res, next) => {
     });
 });
 
+router.patch('/kick/:id', (req, res, next) => {
+    RoomUser.findOne({user: req.body.userID}).exec().then((result) => {
+        if (result) {
+            Room.updateOne({_id: req.params.id}, {
+                $pull: {
+                    users: result._id
+                }
+            }).exec().then((result) => {
+                if (result.modifiedCount === 1) {
+                    RoomUser.deleteOne({user: req.body.userID}).exec().then(() => {
+                        res.status(200).json(`User ${req.body.userID} removed from room ${req.params.id}`);
+                    }).catch((err) => {
+                        res.status(500).json({error: err, message: 'RoomUserKick'});
+                    });
+                } else {
+                    res.status(404).json({
+                        message: `User with id ${req.body.userID} not found in room ${req.params.id}`
+                    });
+                }
+            }).catch((err) => {
+                res.status(500).json({error: err, message: 'RoomUpdate'});
+            });
+        } else {
+            res.status(404).json({
+                message: `User with id ${req.body.userID} not found in any room`
+            });
+        }
+    }).catch((err) => {
+        res.status(500).json(err);
+    });
+});
+
 router.patch('/startGame/:id', (req, res, next) => {
     let room = {};
     let featuredLocation;

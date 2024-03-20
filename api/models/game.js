@@ -14,7 +14,9 @@ const gameSchema = new mongoose.Schema({
     }, endless: {
         type: mongoose.Schema.Types.Boolean, required: true
     }, roundTime: {
-        type: mongoose.Schema.Types.Number, required: false
+        type: mongoose.Schema.Types.String, required: false
+    }, roundStartTime:{
+        type: mongoose.Schema.Types.String, required: false
     }
 });
 

@@ -210,6 +210,8 @@ router.patch('/startGame/:id', (req, res, next) => {
                 LocationsCollection.findOne({_id: req.body.collectionID}).exec().then(async (result) => {
                     featuredLocation = result.locations[Math.round(Math.random() * result.locations.length)];
                     let spy = room.users[Math.round(Math.random() * room.users.length)];
+                    let now = new Date();
+                    let timeString = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
                     const game = new Game({
                         _id: new mongoose.Types.ObjectId(),
                         spy: spy._id,
@@ -217,7 +219,9 @@ router.patch('/startGame/:id', (req, res, next) => {
                         locationsCollection: req.body.collectionID,
                         featuredLocation: featuredLocation,
                         endless: req.body.endless,
-                        roundTime: req.body.roundTime
+                        roundTime: req.body.roundTime,
+                        roundStartTime: timeString,
+                        roundTimeLeft: req.body.roundTime
                     });
                     game.save().then((result) => {
                         room.currentGame = result._id;

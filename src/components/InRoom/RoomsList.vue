@@ -12,7 +12,7 @@ export default {name: 'RoomsList'}
 </script>
 
 <script setup>
-import RoomsListItem from '@/components/RoomsListItem.vue';
+import RoomsListItem from '@/components/InRoom/RoomsListItem.vue';
 import {useRouter} from 'vue-router';
 
 const router = useRouter();

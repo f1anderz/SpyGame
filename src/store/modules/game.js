@@ -2,7 +2,7 @@ import {reactive} from 'vue';
 import gameAPI from '@/api/game.js';
 
 const state = reactive({
-    _id: '', spy: '', users: [], featuredLocation: '', locations: '', endless: false, roundTime: 0
+    _id: '', spy: '', users: [], featuredLocation: {}, locations: [], endless: false, roundTime: 0
 });
 
 const getters = reactive({
@@ -21,8 +21,8 @@ const mutations = {
         state._id = gameInfo._id;
         state.spy = gameInfo.spy.user._id;
         state.users = gameInfo.users;
-        state.featuredLocation = gameInfo.featuredLocation._id;
-        state.locations = gameInfo.locationsCollection._id;
+        state.featuredLocation = {name: gameInfo.featuredLocation.name, image: gameInfo.featuredLocation.image}
+        state.locations = gameInfo.locationsCollection.locations;
         state.endless = gameInfo.endless;
         state.roundTime = gameInfo.roundTime;
     }

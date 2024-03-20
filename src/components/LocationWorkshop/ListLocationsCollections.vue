@@ -11,7 +11,7 @@ export default {name: 'ListLocationsCollections'}
 </script>
 
 <script setup>
-import LocationsCollection from '@/components/LocationsCollection.vue';
+import LocationsCollection from '@/components/LocationWorkshop/LocationsCollection.vue';
 
 const props = defineProps({
   collections: Array

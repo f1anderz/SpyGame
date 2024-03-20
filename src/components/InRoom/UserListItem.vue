@@ -1,11 +1,11 @@
 <template>
   <div class="user-list-item">
     <div class="user-list-item-nickname">{{ props.user.user.username }}
-      <img src="@/assets/img/crown.svg" alt="Host" v-if="props.user.isHost">
+      <img src="../../assets/img/crown.svg" alt="Host" v-if="props.user.isHost">
     </div>
     <div class="user-list-item-score">{{ props.user.score }}</div>
     <div class="user-list-item-controls" v-if="props.isHost && !props.user.isHost">
-      <img src="@/assets/img/kick_user.svg" alt="Kick" @click="emit('kickUser', props.user.user._id)">
+      <img src="../../assets/img/kick_user.svg" alt="Kick" @click="emit('kickUser', props.user.user._id)">
     </div>
   </div>
 </template>

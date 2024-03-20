@@ -12,7 +12,7 @@ export default {name: 'UserList'}
 </script>
 
 <script setup>
-import UserListItem from '@/components/UserListItem.vue';
+import UserListItem from '@/components/InRoom/UserListItem.vue';
 
 const emit = defineEmits(['kickUser']);
 const props = defineProps({

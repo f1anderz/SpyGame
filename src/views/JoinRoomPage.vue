@@ -15,8 +15,7 @@ import {useStore} from 'vuex';
 import {useRouter} from 'vue-router';
 import {onMounted, ref} from 'vue';
 
-import roomAPI from '@/api/room.js';
-import RoomsList from '@/components/RoomsList.vue';
+import RoomsList from '@/components/InRoom/RoomsList.vue';
 
 const store = useStore();
 const router = useRouter();

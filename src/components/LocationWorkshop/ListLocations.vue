@@ -11,7 +11,7 @@ export default {name: 'ListLocations'}
 </script>
 
 <script setup>
-import Location from '@/components/Location.vue';
+import Location from '@/components/LocationWorkshop/Location.vue';
 
 const props = defineProps({
   locations: Array

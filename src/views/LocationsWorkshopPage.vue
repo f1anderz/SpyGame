@@ -25,8 +25,8 @@ import SpyButtonMini from '@/components/UI/SpyButtonMini.vue';
 import {onBeforeMount, ref} from 'vue';
 
 import api from '@/api/locations.js';
-import ListLocationsCollection from '@/components/ListLocationsCollections.vue';
-import SuggestForm from '@/components/SuggestForm.vue';
+import ListLocationsCollection from '@/components/LocationWorkshop/ListLocationsCollections.vue';
+import SuggestForm from '@/components/LocationWorkshop/SuggestForm.vue';
 import AlertWindow from '@/components/UI/SpyAlertWindow.vue';
 
 const collections = ref([]);

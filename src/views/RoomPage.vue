@@ -30,8 +30,8 @@ export default {name: 'RoomPage'}
 import {useStore} from 'vuex';
 import {inject, onMounted, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
-import UserList from '@/components/UserList.vue';
-import RoomControls from '@/components/RoomControls.vue';
+import UserList from '@/components/InRoom/UserList.vue';
+import RoomControls from '@/components/InRoom/RoomControls.vue';
 import SpyButtonMini from '@/components/UI/SpyButtonMini.vue';
 import SpyInput from '@/components/UI/SpyInput.vue';
 import SpyButton from '@/components/UI/SpyButton.vue';
@@ -81,7 +81,6 @@ function kickUser(event) {
 }
 
 async function getRoom() {
-
   if (store.getters['user/isInRoom']) {
     setTimeout(() => {
       store.dispatch('room/getRoom', store.state.room._id).then(async (response) => {
@@ -112,6 +111,7 @@ async function getRoom() {
           } else {
             isHidden.value = false;
             store.commit('user/leaveRoom');
+            store.commit('room/roomCrash');
             cookies.remove('roomID');
             cookies.remove('gameID');
             alertMessage.value = 'You were kicked';
@@ -123,6 +123,7 @@ async function getRoom() {
         } else {
           isHidden.value = false;
           store.commit('user/leaveRoom');
+          store.commit('room/roomCrash');
           cookies.remove('roomID');
           cookies.remove('gameID');
           alertMessage.value = 'Host closed room';

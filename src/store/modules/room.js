@@ -28,10 +28,6 @@ const mutations = {
         state.gameID = gameID;
     }, endGame(state) {
         state.gameID = '';
-    }, roomCrash(state){
-        state._id = '';
-        state.users = [];
-        state.gameID = '';
     }
 }
 

@@ -29,11 +29,13 @@ async function returnToMain() {
   if (cookies.isKey('roomID')) {
     if (confirm('Do you want to leave a room?')) {
       await store.commit('user/leaveRoom');
+      await store.commit('room/endGame');
       await store.dispatch('room/leaveRoom', {
         roomID: cookies.get('roomID'),
         userID: store.state.user._id
       });
       cookies.remove('roomID');
+      cookies.remove('gameID');
       await router.push('/');
     }
   } else {

@@ -21,8 +21,9 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
     Room.findOne({_id: req.params.id}).select('_id users').populate({
-        path: 'currentGame', populate: [{path: 'spy', populate: {path: 'user', select: ['_id', 'username']}},
-            {path: 'users', populate: {path: 'user', select: ['_id']}}]
+        path: 'currentGame', populate: [{path: 'spy', populate: {path: 'user', select: ['_id', 'username']}}, {
+            path: 'users', populate: {path: 'user', select: ['_id']}
+        }]
     }).populate({
         path: 'users', populate: {path: 'user', select: ['_id', 'username']}
     }).exec().then((result) => {
@@ -223,10 +224,14 @@ router.patch('/startGame/:id', (req, res, next) => {
                         roundStartTime: timeString,
                         roundTimeLeft: req.body.roundTime
                     });
-                    game.save().then((result) => {
+                    game.save().then(async (result) => {
                         room.currentGame = result._id;
                         room.users.forEach((user) => {
-                            user.suspectsLeft = Math.floor(room.users.length / 4);
+                            RoomUser.updateOne({_id: user._id}, {suspectsLeft: Math.floor(result.users.length / 4)}).exec().then().catch((err) => {
+                                res.status(500).json({
+                                    error: err
+                                });
+                            });
                         });
                         room.save().then((result) => {
                             res.status(200).json({

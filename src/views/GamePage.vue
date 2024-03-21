@@ -53,6 +53,33 @@ function spyGuess(value) {
   });
 }
 
+function getGame() {
+  setTimeout(() => {
+    if (route.params.id !== store.state.room.gameID) {
+      router.push(`/room/${store.state.room._id}`);
+    } else {
+      store.dispatch('game/getGame', store.state.room.gameID).then((response) => {
+        if (response.data.game) {
+          store.commit('game/setGame', response.data.game);
+          if (store.state.game.spy === store.state.user._id) {
+            card.value = {name: 'Spy', image: 'spy'};
+          } else {
+            card.value = store.state.game.featuredLocation;
+          }
+          timeString.value = `${store.state.game.roundTime}`;
+          getGame();
+        } else {
+          store.commit('room/endGame');
+          cookies.remove('gameID');
+          router.push(`/room/${store.state.room._id}`);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
+  }, 1000);
+}
+
 onMounted(() => {
   if (route.params.id !== store.state.room.gameID) {
     router.push('/');
@@ -66,6 +93,7 @@ onMounted(() => {
           card.value = store.state.game.featuredLocation;
         }
         timeString.value = `${store.state.game.roundTime}`;
+        getGame();
       } else {
         store.commit('room/endGame');
         cookies.remove('gameID');

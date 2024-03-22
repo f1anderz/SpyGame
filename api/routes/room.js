@@ -39,7 +39,16 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
     let roomUser = new RoomUser({
-        _id: new mongoose.Types.ObjectId(), user: req.body.hostID, score: 0, suspectsLeft: 0, isHost: true
+        _id: new mongoose.Types.ObjectId(),
+        user: req.body.hostID,
+        score: 0,
+        suspectsLeft: 0,
+        isHost: true,
+        suspected: false,
+        voted: false,
+        votes: 0,
+        kicked: false,
+        guessed: false
     });
     const room = new Room({
         _id: new mongoose.Types.ObjectId(), users: [], password: req.body.password
@@ -68,7 +77,15 @@ router.patch('/join/:id', (req, res, next) => {
             if (room.users.length < 16) {
                 if (room.password === req.body.password) {
                     let roomUser = new RoomUser({
-                        _id: new mongoose.Types.ObjectId(), user: req.body.userID, score: 0, suspectsLeft: 0
+                        _id: new mongoose.Types.ObjectId(),
+                        user: req.body.userID,
+                        score: 0,
+                        suspectsLeft: 0,
+                        suspected: false,
+                        voted: false,
+                        votes: 0,
+                        kicked: false,
+                        guessed: false
                     });
                     roomUser.save().then((result) => {
                         room.users.push(result._id);
@@ -227,7 +244,16 @@ router.patch('/startGame/:id', (req, res, next) => {
                     game.save().then(async (result) => {
                         room.currentGame = result._id;
                         room.users.forEach((user) => {
-                            RoomUser.updateOne({_id: user._id}, {suspectsLeft: Math.floor(result.users.length / 4)}).exec().then().catch((err) => {
+                            RoomUser.updateOne({_id: user._id}, {
+                                $set: {
+                                    suspectsLeft: Math.floor(result.users.length / 4),
+                                    suspected: false,
+                                    voted: false,
+                                    votes: 0,
+                                    kicked: false,
+                                    guessed: false
+                                }
+                            }).exec().then().catch((err) => {
                                 res.status(500).json({
                                     error: err
                                 });

@@ -15,9 +15,12 @@ const gameSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Boolean, required: true
     }, roundTime: {
         type: mongoose.Schema.Types.String, required: false
-    }, roundStartTime:{
+    }, roundStartTime: {
         type: mongoose.Schema.Types.String, required: false
-    }
+    }, winners: [{
+        type: mongoose.Schema.Types.ObjectId, ref: 'RoomUser', required: false
+    }],
+
 });
 
 module.exports = mongoose.model('Game', gameSchema);

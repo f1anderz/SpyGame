@@ -2,10 +2,11 @@
   <div class="game-user-list-item">
     <div class="game-user-list-item-username">{{ props.user.user.username }}</div>
     <div class="game-user-list-item-controls">
-      <img class="game-user-list-item-controls-active" v-if="props.user.suspectsLeft > 0" src="@/assets/img/star.svg"
+      <img v-if="store.state.user._id !== props.user.user._id" :class="{disabled: store.state.game.suspects < 1}"
+           class="game-user-list-item-controls-suspect" src="@/assets/img/detective.svg" alt="Suspect"
+           @click="emit('spyGuess', props.user._id)">
+      <img class="game-user-list-item-controls-active" :class="{disabled: props.user.suspectsLeft < 1}" src="@/assets/img/star.svg"
            alt="Active">
-      <img :class="{disabled: props.user.suspectsLeft === 0}" class="game-user-list-item-controls-suspect"
-           src="@/assets/img/detective.svg" alt="Suspect" @click="emit('spyGuess', props.user._id)">
     </div>
   </div>
 </template>
@@ -15,6 +16,9 @@ export default {name: 'GameUserListItem'}
 </script>
 
 <script setup>
+import {useStore} from 'vuex';
+
+const store = useStore();
 const emit = defineEmits(['spyGuess']);
 const props = defineProps({
   user: {
@@ -61,16 +65,6 @@ const props = defineProps({
   @include style.breakpoint(xxl) {
     &:hover {
       color: style.$accent-color;
-    }
-  }
-}
-
-.disabled {
-  filter: opacity(.5);
-
-  @include style.breakpoint(xxl) {
-    &:hover {
-      cursor: not-allowed;
     }
   }
 }

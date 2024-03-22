@@ -16,9 +16,9 @@ export default {
                 'Content-Type': 'application/json', 'x-api-key': api.key
             }
         });
-    }, async guessSpy(gameInfo) {
-        return await axios.patch(`${api.link}/games/guessSpy/${gameInfo.gameID}`, {
-            spyID: gameInfo.spyID
+    }, async suspectSpy(gameInfo) {
+        return await axios.patch(`${api.link}/games/suspectSpy/${gameInfo.gameID}`, {
+            spyID: gameInfo.spyID, userID: gameInfo.userID
         }, {
             headers: {
                 'Content-Type': 'application/json', 'x-api-key': api.key

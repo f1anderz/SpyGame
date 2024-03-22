@@ -1,4 +1,5 @@
 @use 'variables';
+@use 'mixins';
 
 html {
   scroll-behavior: smooth;
@@ -10,4 +11,14 @@ html {
 
 ::selection {
   background-color: rgba(255, 69, 0, .2);
+}
+
+.disabled {
+  filter: opacity(.5);
+
+  @include mixins.breakpoint(xxl) {
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
 }

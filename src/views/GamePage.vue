@@ -4,9 +4,10 @@
     <div class="spy-game-page-featured">
       <highlight-card :card="card"/>
       <game-timer v-if="!store.state.game.endless" :time="timeString"/>
-      <game-user-list :users="store.state.game.users" @spy-guess="spyGuess"/>
+      <game-user-list :users="store.state.game.users" @spy-guess="spySuspect"/>
     </div>
     <collection-display :collection="store.state.game.locations" @location-guess="locationGuess"/>
+    <vote-form v-if="suspected" :voted="store.state.game.voted" :suspect="suspected"/>
   </div>
 </template>
 
@@ -22,6 +23,7 @@ import HighlightCard from '@/components/InGame/HiglightCard.vue';
 import GameUserList from '@/components/InGame/GameUserList.vue';
 import CollectionDisplay from '@/components/InGame/CollectionDisplay.vue';
 import GameTimer from '@/components/InGame/GameTimer.vue';
+import VoteForm from '@/components/InGame/VoteForm.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -30,24 +32,26 @@ const cookies = inject('$cookies');
 
 const card = ref({});
 const timeString = ref('--:--');
+const suspected = ref('');
 
 function locationGuess(value) {
   store.dispatch('game/guessLocation', {
     gameID: store.state.game._id,
     locationID: value
   }).then((response) => {
-    console.log(response.data.guess);
+    console.log(response.data);
   }).catch((err) => {
     console.log(err)
   });
 }
 
-function spyGuess(value) {
-  store.dispatch('game/guessSpy', {
+function spySuspect(value) {
+  store.dispatch('game/suspectSpy', {
     gameID: store.state.game._id,
-    spyID: value
+    spyID: value,
+    userID: store.state.user._id
   }).then((response) => {
-    console.log(response.data.guess);
+    console.log(response.data);
   }).catch((err) => {
     console.log(err)
   });
@@ -58,20 +62,28 @@ function getGame() {
     if (route.params.id !== store.state.room.gameID) {
       router.push(`/room/${store.state.room._id}`);
     } else {
-      store.dispatch('game/getGame', store.state.room.gameID).then((response) => {
+      store.dispatch('game/getGame', store.state.room.gameID).then(async (response) => {
         if (response.data.game) {
           store.commit('game/setGame', response.data.game);
+          store.commit('game/setGameConfig', store.state.user._id);
           if (store.state.game.spy === store.state.user._id) {
             card.value = {name: 'Spy', image: 'spy'};
           } else {
             card.value = store.state.game.featuredLocation;
           }
-          timeString.value = `${store.state.game.roundTime}`;
-          getGame();
+          if (!store.state.game.endless) {
+            timeString.value = `${store.state.game.roundTime}`;
+          }
+          suspected.value = store.getters['game/getSuspects'][0].user.username;
+          if (store.state.game.winners.length > 0) {
+
+          } else {
+            getGame();
+          }
         } else {
-          store.commit('room/endGame');
           cookies.remove('gameID');
-          router.push(`/room/${store.state.room._id}`);
+          await store.commit('room/endGame');
+          await router.push(`/room/${store.state.room._id}`);
         }
       }).catch((err) => {
         console.log(err);
@@ -87,6 +99,7 @@ onMounted(() => {
     store.dispatch('game/getGame', store.state.room.gameID).then((response) => {
       if (response.data.game) {
         store.commit('game/setGame', response.data.game);
+        store.commit('game/setGameConfig', store.state.user._id);
         if (store.state.game.spy === store.state.user._id) {
           card.value = {name: 'Spy', image: 'spy'};
         } else {

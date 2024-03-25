@@ -225,6 +225,11 @@ router.patch('/startGame/:id', (req, res, next) => {
     Room.findOne({_id: req.params.id}).populate('users').exec().then((room) => {
         if (room !== null) {
             if (room.users.length >= 4) {
+                if (room.currentGame) {
+                    Game.deleteOne({_id: room.currentGame}).exec().then().catch((err) => {
+                        res.status(500).json(err);
+                    });
+                }
                 LocationsCollection.findOne({_id: req.body.collectionID}).exec().then(async (result) => {
                     featuredLocation = result.locations[Math.round(Math.random() * result.locations.length)];
                     let spy = room.users[Math.round(Math.random() * room.users.length)];
@@ -239,14 +244,15 @@ router.patch('/startGame/:id', (req, res, next) => {
                         endless: req.body.endless,
                         roundTime: req.body.roundTime,
                         roundStartTime: timeString,
-                        roundTimeLeft: req.body.roundTime
+                        roundTimeLeft: req.body.roundTime,
+                        winners: []
                     });
                     game.save().then(async (result) => {
                         room.currentGame = result._id;
                         room.users.forEach((user) => {
                             RoomUser.updateOne({_id: user._id}, {
                                 $set: {
-                                    suspectsLeft: Math.floor(result.users.length / 4),
+                                    suspectsLeft: 1,
                                     suspected: false,
                                     voted: false,
                                     votes: 0,
@@ -254,9 +260,7 @@ router.patch('/startGame/:id', (req, res, next) => {
                                     guessed: false
                                 }
                             }).exec().then().catch((err) => {
-                                res.status(500).json({
-                                    error: err
-                                });
+                                res.status(500).json(err);
                             });
                         });
                         room.save().then((result) => {
@@ -265,19 +269,13 @@ router.patch('/startGame/:id', (req, res, next) => {
                                 room: result
                             });
                         }).catch((err) => {
-                            res.status(500).json({
-                                error: err
-                            });
+                            res.status(500).json(err);
                         });
                     }).catch((err) => {
-                        res.status(500).json({
-                            error: err
-                        });
+                        res.status(500).json(err);
                     });
                 }).catch((err) => {
-                    res.status(500).json({
-                        error: err
-                    });
+                    res.status(500).json(err);
                 });
             } else {
                 res.status(500).json({
@@ -294,9 +292,7 @@ router.patch('/startGame/:id', (req, res, next) => {
             });
         }
     }).catch((err) => {
-        res.status(500).json({
-            error: err
-        });
+        res.status(500).json(err);
     });
 });
 

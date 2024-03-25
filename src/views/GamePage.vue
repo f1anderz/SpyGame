@@ -37,6 +37,7 @@ const suspected = ref('');
 function locationGuess(value) {
   store.dispatch('game/guessLocation', {
     gameID: store.state.game._id,
+    userID: store.state.user._id,
     locationID: value
   }).then((response) => {
     console.log(response.data);
@@ -74,7 +75,10 @@ function getGame() {
           if (!store.state.game.endless) {
             timeString.value = `${store.state.game.roundTime}`;
           }
-          suspected.value = store.getters['game/getSuspects'][0].user.username;
+          suspected.value = '';
+          if (store.getters['game/getSuspects'].length > 0) {
+            suspected.value = store.getters['game/getSuspects'][0].user.username;
+          }
           if (store.state.game.winners.length > 0) {
 
           } else {
@@ -123,6 +127,7 @@ onMounted(() => {
 @use '@/assets/scss/style';
 
 .spy-game-page {
+  position: relative;
   height: 100vh;
   display: flex;
   flex-direction: column;

@@ -69,6 +69,8 @@ const actions = {
         return await gameAPI.guessLocation(gameInfo);
     }, async suspectSpy(context, gameInfo) {
         return await gameAPI.suspectSpy(gameInfo);
+    }, async voteSpy(context, gameInfo){
+        return await gameAPI.voteSpy(gameInfo);
     }
 };
 

@@ -1,11 +1,13 @@
 <template>
-  <div class="game-user-list-item">
+  <div class="game-user-list-item" :class="{disabled: props.user.kicked, 'hover-highlight': !props.user.kicked}">
     <div class="game-user-list-item-username">{{ props.user.user.username }}</div>
     <div class="game-user-list-item-controls">
-      <img v-if="store.state.user._id !== props.user.user._id" :class="{disabled: store.state.game.suspects < 1}"
+      <img v-if="store.state.user._id !== props.user.user._id && !props.user.kicked"
+           :class="{disabled: store.state.game.suspects < 1 || store.state.game.kicked}"
            class="game-user-list-item-controls-suspect" src="@/assets/img/detective.svg" alt="Suspect"
            @click="emit('spyGuess', props.user._id)">
-      <img class="game-user-list-item-controls-active" :class="{disabled: props.user.suspectsLeft < 1}" src="@/assets/img/star.svg"
+      <img v-if="!props.user.kicked" class="game-user-list-item-controls-active"
+           :class="{disabled: props.user.suspectsLeft < 1}" src="@/assets/img/star.svg"
            alt="Active">
     </div>
   </div>
@@ -61,7 +63,9 @@ const props = defineProps({
       }
     }
   }
+}
 
+.hover-highlight {
   @include style.breakpoint(xxl) {
     &:hover {
       color: style.$accent-color;

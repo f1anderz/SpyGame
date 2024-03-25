@@ -24,5 +24,13 @@ export default {
                 'Content-Type': 'application/json', 'x-api-key': api.key
             }
         });
+    }, async voteSpy(gameInfo) {
+        return await axios.patch(`${api.link}/games/voteSpy/${gameInfo.gameID}`, {
+            spyID: gameInfo.spyID, userID: gameInfo.userID, vote: gameInfo.vote
+        }, {
+            headers: {
+                'Content-Type': 'application/json', 'x-api-key': api.key
+            }
+        });
     }
 }

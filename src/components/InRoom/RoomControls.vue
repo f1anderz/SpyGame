@@ -53,7 +53,7 @@ async function startGame() {
     cookies.set('gameID', response.data.room.currentGame);
     store.commit('room/setGame', response.data.room.currentGame);
   }).catch((err) => {
-    message.value = err.response.data.error.message;
+    message.value = err.response.data.message;
   });
 }
 

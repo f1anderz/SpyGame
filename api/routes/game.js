@@ -14,6 +14,8 @@ router.get('/:id', (req, res, next) => {
         path: 'featuredLocation'
     }).populate({
         path: 'locationsCollection', populate: {path: 'locations'}
+    }).populate({
+        path: 'winners', populate: {path: 'user'}
     }).exec().then((game) => {
         if (game.endless === false) {
             let now = new Date();
@@ -22,8 +24,8 @@ router.get('/:id', (req, res, next) => {
             let totalMinutes = hours * 60 + minutes + Number(game.roundTime);
             let result = `${String(Math.floor(totalMinutes / 60) % 24).padStart(2, '0')}:${String(totalMinutes % 60).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             if (result === timeString) {
-                RoomUser.find({_id: game.spy}).exec().then((result) => {
-                    game.winners = result;
+                game.winners = [game.spy];
+                RoomUser.updateOne({_id: game.spy}, {$inc: {score: 4}}).exec().then(() => {
                     game.save().then(() => {
                     }).catch((err) => {
                         res.status(500).json(err);
@@ -49,6 +51,9 @@ router.patch('/guessLocation/:id', (req, res, next) => {
     }).populate({path: 'users'}).exec().then((game) => {
         if (game) {
             game.winners = [game.spy];
+            RoomUser.updateOne({_id: game.spy}, {$inc: {score: 4}}).exec().then().catch((err) => {
+                res.status(500).json(err);
+            });
             game.save().then(() => {
                 res.status(200).json({message: 'Guess correct'});
             }).catch((err) => {
@@ -91,6 +96,7 @@ router.patch('/suspectSpy/:id', (req, res, next) => {
     RoomUser.findOne({user: req.body.userID}).exec().then((result) => {
         if (result.suspectsLeft > 0) {
             result.suspectsLeft = 0;
+            result.guessed = true;
             result.voted = true;
             result.save().then(() => {
                 RoomUser.updateOne({_id: req.body.spyID}, {
@@ -134,9 +140,15 @@ router.patch('/voteSpy/:id', (req, res, next) => {
                     if (result.votes > 0) {
                         result.kicked = true;
                         result.save().then(() => {
+                            RoomUser.updateMany({kicked: false}, {$inc: {score: 2}}).exec().then().catch((err) => {
+                                res.status(500).json(err);
+                            });
+                            RoomUser.updateOne({guessed: true}, {$inc: {score: 1}}).exec().then().catch((err) => {
+                                res.status(500).json(err);
+                            });
                             RoomUser.updateMany({}, {
                                 $set: {
-                                    suspected: false, voted: false, votes: 0
+                                    suspected: false, voted: false, votes: 0, guessed: false
                                 }
                             }).exec().then().catch((err) => {
                                 res.status(500).json(err);
@@ -183,10 +195,6 @@ router.patch('/voteSpy/:id', (req, res, next) => {
     }).catch((err) => {
         res.status(500).json(err);
     });
-});
-
-router.patch('/distributePoints/:id', (req, res, next) => {
-
 });
 
 module.exports = router;

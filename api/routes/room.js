@@ -296,4 +296,16 @@ router.patch('/startGame/:id', (req, res, next) => {
     });
 });
 
+router.patch('/endGame/:id', (req, res, next) => {
+    Room.updateOne({_id: req.params.id}, {$unset: {currentGame: ''}}).exec().then(() => {
+        Game.deleteOne({_id: req.body.gameID}).exec().then(() => {
+            res.status(200).json('game ended');
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }).catch((err) => {
+        res.status(500).json(err);
+    });
+});
+
 module.exports = router;

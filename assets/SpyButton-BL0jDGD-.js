@@ -1,0 +1,1 @@
+import{_ as e,o as a,c as p,t as r}from"./index-D7cZbWx5.js";const i={name:"SpyButton"},_=Object.assign(i,{props:{content:String},emits:["buttonClick"],setup(n,{emit:o}){const s=o,c=n;return(u,t)=>(a(),p("button",{class:"spy-button",onClick:t[0]||(t[0]=l=>s("buttonClick"))},r(c.content),1))}}),b=e(_,[["__scopeId","data-v-6c2ceca7"]]);export{b as S};

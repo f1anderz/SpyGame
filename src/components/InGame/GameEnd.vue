@@ -35,6 +35,7 @@ const props = defineProps({
   justify-content: center;
   align-items: center;
   background: rgba(100, 100, 100, .1);
+  z-index: 3;
 
   &-announcement {
     padding: 3rem 6rem;

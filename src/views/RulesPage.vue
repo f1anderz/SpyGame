@@ -58,7 +58,7 @@ const rulesList = [
     id: 2,
     header: 'Points',
     body: ['Detectives, who weren`t kicked get 2 points each for a win', 'The detective, who suspected a Spy and ' +
-    'after that the Spy was kicked, gets 2 additional points', 'The spy gets 4 points for location guess', 'The ' +
+    'after that the Spy was kicked, gets 1 additional point', 'The spy gets 4 points for location guess', 'The ' +
     'spy gets 2 points if the timer goes off']
   }
 ];

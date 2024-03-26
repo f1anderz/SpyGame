@@ -54,5 +54,13 @@ export default {
                 'Content-Type': 'application/json', 'x-api-key': api.key
             }
         });
+    }, async endGame(gameInfo) {
+        return await axios.patch(`${api.link}/rooms/endGame/${gameInfo.roomID}`, {
+            gameID: gameInfo.gameID
+        }, {
+            headers: {
+                'x-api-key': api.key
+            }
+        });
     }
 }

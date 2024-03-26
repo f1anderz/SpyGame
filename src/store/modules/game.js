@@ -19,9 +19,12 @@ const state = reactive({
 
 const getters = reactive({
     getSuspects: (state) => {
-        return state.users.filter((user)=>{
+        return state.users.filter((user) => {
             return user.suspected === true
         });
+    },
+    gameEnd: (state) => {
+        return state.winners.length > 0;
     }
 });
 
@@ -69,7 +72,7 @@ const actions = {
         return await gameAPI.guessLocation(gameInfo);
     }, async suspectSpy(context, gameInfo) {
         return await gameAPI.suspectSpy(gameInfo);
-    }, async voteSpy(context, gameInfo){
+    }, async voteSpy(context, gameInfo) {
         return await gameAPI.voteSpy(gameInfo);
     }
 };

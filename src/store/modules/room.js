@@ -1,5 +1,6 @@
 import roomAPI from '@/api/room.js'
 import {reactive} from 'vue';
+import gameAPI from '@/api/game.js';
 
 const state = reactive({
     _id: '', users: [], gameID: ''
@@ -28,6 +29,10 @@ const mutations = {
         state.gameID = gameID;
     }, endGame(state) {
         state.gameID = '';
+    }, leaveRoom(state) {
+        state._id = '';
+        state.users = '';
+        state.gameID = '';
     }
 }
 
@@ -49,6 +54,8 @@ const actions = {
         return await roomAPI.kickUser(kickInfo);
     }, async startGame(context, gameInfo) {
         return await roomAPI.startGame(gameInfo);
+    }, async endGame(context, gameInfo) {
+        return await roomAPI.endGame(gameInfo);
     }
 }
 

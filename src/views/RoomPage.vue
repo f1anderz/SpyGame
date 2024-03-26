@@ -105,13 +105,16 @@ async function getRoom() {
               });
               if (userInGame) {
                 await router.push(`/game/${response.data.room.currentGame._id}`);
+              } else {
+                await getRoom();
               }
+            } else {
+              await getRoom();
             }
-            await getRoom();
           } else {
             isHidden.value = false;
             store.commit('user/leaveRoom');
-            store.commit('room/roomCrash');
+
             cookies.remove('roomID');
             cookies.remove('gameID');
             alertMessage.value = 'You were kicked';
@@ -123,7 +126,7 @@ async function getRoom() {
         } else {
           isHidden.value = false;
           store.commit('user/leaveRoom');
-          store.commit('room/roomCrash');
+          store.commit('room/leaveRoom');
           cookies.remove('roomID');
           cookies.remove('gameID');
           alertMessage.value = 'Host closed room';

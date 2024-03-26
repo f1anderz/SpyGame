@@ -8,6 +8,7 @@
     </div>
     <collection-display :collection="store.state.game.locations" @location-guess="locationGuess"/>
     <vote-form v-if="suspected" :voted="store.state.game.voted" :suspect="suspected"/>
+    <game-end v-if="store.getters['game/gameEnd']" :winners="store.state.game.winners"/>
   </div>
 </template>
 
@@ -24,6 +25,7 @@ import GameUserList from '@/components/InGame/GameUserList.vue';
 import CollectionDisplay from '@/components/InGame/CollectionDisplay.vue';
 import GameTimer from '@/components/InGame/GameTimer.vue';
 import VoteForm from '@/components/InGame/VoteForm.vue';
+import GameEnd from '@/components/InGame/GameEnd.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -79,8 +81,15 @@ function getGame() {
           if (store.getters['game/getSuspects'].length > 0) {
             suspected.value = store.getters['game/getSuspects'][0].user.username;
           }
-          if (store.state.game.winners.length > 0) {
-
+          if (store.getters['game/gameEnd']) {
+            if (store.getters['room/getHostID'] === store.state.user._id) {
+              await store.dispatch('room/endGame', {roomID: store.state.room._id, gameID: store.state.room.gameID})
+            }
+            cookies.remove('gameID');
+            store.commit('room/endGame');
+            setTimeout(() => {
+              router.push(`/room/${store.state.room._id}`);
+            }, 5000);
           } else {
             getGame();
           }
